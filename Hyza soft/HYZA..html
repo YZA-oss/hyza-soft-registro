@@ -56,7 +56,7 @@
             border: 2px solid #1f2c48;
         }
 
-        /* Cabeçalho com logo HYZA */
+        /* Cabeçalho com logo I e HYZA SOFT */
         .header {
             display: flex;
             align-items: center;
@@ -69,31 +69,42 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 5px;
         }
 
         .logo-icon {
             background-color: #1f2c48;
             color: #fdf8f0;
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             border-radius: 20px 5px 20px 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 4rem;
             font-weight: bold;
             box-shadow: 5px 5px 0 #99a8c9;
+            line-height: 1;
         }
 
-        .logo-text h1 {
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            margin-left: 0px;
+        }
+
+        .logo-text .hyza {
+            font-size: 2.5rem;
+            font-weight: bold;
             color: #1f2c48;
-            font-size: 2.2rem;
+            letter-spacing: 2px;
         }
 
-        .logo-text p {
+        .logo-text .soft {
+            font-size: 1.8rem;
+            font-weight: normal;
             color: #4a5b7c;
-            font-size: 0.9rem;
+            margin-top: -8px;
         }
 
         .versao {
@@ -444,13 +455,13 @@
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
+        <!-- Header com logo: I maiúsculo + HYZA SOFT (HYZA maior, SOFT menor) -->
         <div class="header">
             <div class="logo">
-                <div class="logo-icon">HYZA</div>
+                <div class="logo-icon">I</div>
                 <div class="logo-text">
-                    <h1>SOFT</h1>
-                    <p>gestão profissional</p>
+                    <div class="hyza">HYZA</div>
+                    <div class="soft">SOFT</div>
                 </div>
             </div>
             <div class="versao">v2.0</div>
@@ -569,7 +580,7 @@
         <div class="footer">
             <i class="fas fa-phone-alt"></i> (43) 98871-8805 &nbsp;&nbsp; 
             <i class="fas fa-envelope"></i> hyza.eng@gmail.com &nbsp;&nbsp; 
-            HYZA SOFT © 2026
+            I HYZA SOFT © 2026
         </div>
     </div>
 
