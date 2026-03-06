@@ -76,7 +76,7 @@
             border: 1px solid #dce3ed;
         }
 
-        /* cabeçalho com logo HYZA mesclada */
+        /* cabeçalho com logo mesclada HYZA */
         .top-bar {
             display: flex;
             flex-wrap: wrap;
@@ -351,7 +351,7 @@
             text-decoration: underline;
         }
 
-        /* área de login admin (inicialmente oculta) */
+        /* área de login admin */
         .admin-login-box {
             background: #f2e9db;
             border-radius: 30px 8px 30px 8px;
@@ -396,7 +396,7 @@
             color: #1f2c48;
         }
 
-        /* painel admin de reclamações (inicialmente oculto) */
+        /* painel admin de reclamações */
         .admin-panel {
             background: #f2e9db;
             border-radius: 30px 8px 30px 8px;
@@ -696,7 +696,7 @@
                     </div>
                 </div>
 
-                <!-- Área de login do administrador -->
+                <!-- Área de login do administrador - SENHA: 283090 -->
                 <div class="admin-login-box">
                     <h4><i class="fas fa-lock"></i> Acesso admin</h4>
                     <input type="password" id="adminSenha" class="admin-input" placeholder="Digite a senha">
@@ -761,7 +761,7 @@
             // ---------- DADOS ----------
             const STORAGE_KEY = 'hyza_profissional';
             const RECLAMACOES_KEY = 'hyza_reclamacoes';
-            const ADMIN_SENHA = 'admin123'; // senha simples para demonstração
+            const ADMIN_SENHA = '283090'; // SENHA DEFINIDA PELO USUÁRIO
 
             let registros = [];
             let reclamacoes = [];
@@ -941,7 +941,7 @@
                 listaDiv.innerHTML = html;
             }
 
-            // Login admin
+            // Login admin - usando a senha 283090
             document.getElementById('btnLoginAdmin').addEventListener('click', function() {
                 const senha = document.getElementById('adminSenha').value;
                 const feedback = document.getElementById('loginFeedback');
@@ -996,4 +996,21 @@
 
             // Inicialização
             carregarRegistros();
-            carregarReclam
+            carregarReclamacoes();
+            renderizarTabela();
+
+            // Event listeners
+            document.getElementById('btnAdicionar').addEventListener('click', adicionarRegistro);
+            document.getElementById('searchBtn').addEventListener('click', () => {
+                const termo = document.getElementById('searchInput').value.trim();
+                pesquisar(termo);
+            });
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    pesquisar(e.target.value.trim());
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
