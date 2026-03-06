@@ -3,42 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HYZA SOFT · Gestão profissional</title>
+    <title>HYZA SOFT · Sistema de Gestão</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
         body {
-            background-color: #faf6ef;
-            position: relative;
+            background-color: #fdf8f0; /* creme */
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem 1.5rem;
+            position: relative;
+            padding: 20px;
         }
 
-        /* watermark vertical */
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background-image: repeating-linear-gradient(90deg, 
-                transparent 0px, 
-                transparent 50px, 
-                rgba(25, 45, 80, 0.025) 50px, 
-                rgba(25, 45, 80, 0.025) 52px);
-            pointer-events: none;
-            z-index: 0;
-        }
-
+        /* Marca d'água HYZA-SOFT na vertical */
         body::after {
-            content: "HYZA-SOFT  HYZA-SOFT  HYZA-SOFT  HYZA-SOFT  HYZA-SOFT  HYZA-SOFT";
+            content: "HYZA-SOFT HYZA-SOFT HYZA-SOFT HYZA-SOFT HYZA-SOFT HYZA-SOFT";
             position: fixed;
             top: 0;
             left: 0;
@@ -50,359 +34,258 @@
             align-items: center;
             writing-mode: vertical-rl;
             text-orientation: upright;
-            font-size: 5rem;
-            font-weight: 600;
-            letter-spacing: 18px;
-            color: rgba(20, 35, 65, 0.04);
+            font-size: 4rem;
+            font-weight: bold;
+            color: rgba(25, 40, 70, 0.1);
             white-space: nowrap;
             transform: rotate(180deg);
-            line-height: 1.2;
             pointer-events: none;
             z-index: 0;
-            font-family: 'Montserrat', 'Courier New', monospace;
-            text-transform: uppercase;
+            font-family: 'Courier New', monospace;
         }
 
-        .main-card {
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
             position: relative;
-            z-index: 10;
-            width: 100%;
-            max-width: 1400px;
-            background: rgba(255, 251, 242, 0.92);
-            backdrop-filter: blur(3px);
-            border-radius: 2rem 1rem 2rem 1rem;
-            box-shadow: 0 25px 45px -18px #0b1a2f, 0 0 0 1px rgba(25, 45, 80, 0.2);
-            padding: 2rem 2.2rem;
-            border: 1px solid #dce3ed;
+            z-index: 1;
+            background-color: rgba(255, 250, 240, 0.9);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 2px solid #1f2c48;
         }
 
-        /* cabeçalho com logo mesclada HYZA */
-        .top-bar {
+        /* Cabeçalho com logo HYZA */
+        .header {
             display: flex;
-            flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 2rem;
-            border-bottom: 2px solid #1f2c48;
-            padding-bottom: 1rem;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #1f2c48;
+            padding-bottom: 15px;
         }
 
-        .logo-area {
+        .logo {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 15px;
         }
 
-        /* Logo customizada mesclando H Y Z A */
-        .logo-hyza {
-            background: #1f2c48;
-            width: 60px;
-            height: 60px;
-            border-radius: 18px 4px 18px 4px;
+        .logo-icon {
+            background-color: #1f2c48;
+            color: #fdf8f0;
+            width: 70px;
+            height: 70px;
+            border-radius: 20px 5px 20px 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 6px 6px 0 #b9c2d4;
-            position: relative;
-        }
-
-        .logo-hyza span {
-            color: #fff3e0;
-            font-size: 2.2rem;
-            font-weight: 700;
-            letter-spacing: -3px;
-            transform: scale(1.1);
-            display: inline-block;
-            text-shadow: 1px 1px 0 #0f1a2c;
-            font-family: 'Poppins', 'Inter', sans-serif;
+            font-size: 2.5rem;
+            font-weight: bold;
+            box-shadow: 5px 5px 0 #99a8c9;
         }
 
         .logo-text h1 {
+            color: #1f2c48;
             font-size: 2.2rem;
-            font-weight: 500;
-            letter-spacing: 1px;
-            color: #1f2c48;
-            line-height: 1.1;
         }
 
-        .logo-text span {
-            font-size: 0.8rem;
-            color: #3d5075;
-            background: #e6decf;
-            padding: 0.2rem 1rem;
-            border-radius: 30px;
-        }
-
-        .badge-sistema {
-            background: #1f2c48;
-            color: #faf3e4;
-            padding: 0.6rem 1.5rem;
-            border-radius: 40px;
-            font-weight: 500;
+        .logo-text p {
+            color: #4a5b7c;
             font-size: 0.9rem;
-            border: 1px solid #fffbf0;
-            box-shadow: inset 0 1px 3px #ffffff50;
         }
 
-        /* pesquisa refinada */
-        .search-section {
-            margin-bottom: 2.5rem;
+        .versao {
+            background-color: #1f2c48;
+            color: #fdf8f0;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
         }
 
-        .search-container {
+        /* Barra de pesquisa */
+        .search-box {
             display: flex;
-            align-items: center;
-            background: white;
-            border-radius: 60px;
+            margin-bottom: 30px;
             border: 2px solid #1f2c48;
-            padding: 0.2rem 0.2rem 0.2rem 1.8rem;
-            transition: box-shadow 0.2s;
-        }
-
-        .search-container:focus-within {
-            box-shadow: 0 0 0 4px rgba(31, 44, 72, 0.15);
-        }
-
-        .search-container i {
-            color: #1f2c48;
-            font-size: 1.2rem;
-            opacity: 0.7;
-        }
-
-        .search-container input {
-            flex: 1;
-            border: none;
-            padding: 1rem 0.8rem;
-            font-size: 1.1rem;
-            background: transparent;
-            outline: none;
-            color: #1a263b;
-        }
-
-        .search-container button {
-            background: #1f2c48;
-            border: none;
             border-radius: 50px;
-            padding: 0.8rem 2.2rem;
-            color: white;
-            font-weight: 600;
+            overflow: hidden;
+            background: white;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            outline: none;
             font-size: 1rem;
+        }
+
+        .search-box button {
+            background-color: #1f2c48;
+            color: white;
+            border: none;
+            padding: 0 30px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: 0.2s;
-            border: 2px solid #1f2c48;
-            letter-spacing: 0.3px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: 0.3s;
         }
 
-        .search-container button:hover {
-            background: #263b60;
-            transform: scale(1.02);
+        .search-box button:hover {
+            background-color: #2f4070;
         }
 
-        /* grid principal */
-        .painel-principal {
+        /* Grid de 2 colunas */
+        .grid-2 {
             display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 2rem;
-            margin-bottom: 2.5rem;
+            grid-template-columns: 1fr 350px;
+            gap: 25px;
+            margin-bottom: 30px;
         }
 
-        /* formulário */
+        /* Formulário de registro */
         .form-card {
-            background: rgba(255, 250, 240, 0.7);
+            background-color: #fff9f0;
             border: 2px solid #1f2c48;
-            border-radius: 1.8rem 0.3rem 1.8rem 0.3rem;
-            padding: 1.8rem 1.8rem 2rem;
-            box-shadow: 12px 12px 0 #d1d9e8;
+            border-radius: 20px 5px 20px 5px;
+            padding: 25px;
+            box-shadow: 8px 8px 0 #c5cfdf;
         }
 
         .form-card h2 {
-            display: flex;
-            align-items: center;
-            gap: 12px;
             color: #1f2c48;
-            font-weight: 450;
-            font-size: 1.8rem;
-            margin-bottom: 1.8rem;
-            border-left: 10px solid #1f2c48;
-            padding-left: 1rem;
+            margin-bottom: 20px;
+            border-left: 8px solid #1f2c48;
+            padding-left: 15px;
         }
 
-        .campos-grid {
+        .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
-        .campo {
+        .form-group {
             display: flex;
             flex-direction: column;
-            gap: 0.4rem;
-        }
-
-        .campo label {
-            font-weight: 600;
-            color: #1f2c48;
-            font-size: 0.85rem;
-            letter-spacing: 0.4px;
-            display: flex;
-            align-items: center;
             gap: 5px;
         }
 
-        .campo input, .campo select {
-            background: white;
+        .form-group label {
+            color: #1f2c48;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select {
+            padding: 12px;
             border: 2px solid #1f2c48;
-            border-radius: 18px;
-            padding: 0.8rem 1.2rem;
-            font-size: 0.95rem;
+            border-radius: 15px;
             outline: none;
-            transition: 0.15s;
-            color: #131e30;
+            background: white;
         }
 
-        .campo input:focus, .campo select:focus {
-            border-color: #2f4570;
-            box-shadow: 0 0 0 3px rgba(31, 44, 72, 0.15);
-        }
-
-        .btn-adicionar {
-            background: #1f2c48;
+        .btn-add {
+            background-color: #1f2c48;
+            color: white;
             border: none;
-            padding: 1rem 1.5rem;
+            padding: 15px;
             border-radius: 50px;
-            color: #fef6e8;
             font-size: 1.2rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.8rem;
+            font-weight: bold;
             cursor: pointer;
             width: 100%;
-            border: 2px solid #1f2c48;
-            transition: all 0.2s;
+            transition: 0.3s;
         }
 
-        .btn-adicionar:hover {
-            background: #2c3f64;
-            box-shadow: 0 6px 0 #0f1a2a;
+        .btn-add:hover {
+            background-color: #2f4070;
             transform: translateY(-2px);
+            box-shadow: 0 5px 0 #0f1a2c;
         }
 
-        /* card de contato + login admin */
+        /* Card de contato e admin */
         .contato-card {
-            background: #ffffffd9;
+            background-color: #fff9f0;
             border: 2px solid #1f2c48;
-            border-radius: 1.8rem 0.3rem 1.8rem 0.3rem;
-            padding: 1.8rem 1.5rem;
-            box-shadow: 8px 8px 0 #ced6e6;
-            display: flex;
-            flex-direction: column;
+            border-radius: 20px 5px 20px 5px;
+            padding: 25px;
+            box-shadow: 8px 8px 0 #c5cfdf;
         }
 
         .contato-card h3 {
             color: #1f2c48;
-            font-weight: 500;
-            font-size: 1.6rem;
-            border-bottom: 3px dotted #1f2c48;
-            padding-bottom: 0.6rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px dotted #1f2c48;
+            padding-bottom: 10px;
         }
 
-        .info-contato {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-            margin-bottom: 1.8rem;
-        }
-
-        .info-item {
+        .contato-item {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            background: #f4efe7;
-            padding: 0.9rem 1rem;
+            gap: 15px;
+            background-color: #efe8dc;
+            padding: 12px 15px;
             border-radius: 50px;
-            border: 1px solid #b7c1d4;
+            margin-bottom: 15px;
+            border: 1px solid #1f2c48;
+        }
+
+        .contato-item i {
             color: #1f2c48;
+            font-size: 1.2rem;
+            width: 25px;
+        }
+
+        .contato-item a {
+            color: #1f2c48;
+            text-decoration: none;
             font-weight: 500;
         }
 
-        .info-item i {
-            font-size: 1.3rem;
-            width: 28px;
-            color: #1f2c48;
-        }
-
-        .info-item a {
-            text-decoration: none;
-            color: #1f2c48;
-            word-break: break-all;
-        }
-
-        .info-item a:hover {
-            text-decoration: underline;
-        }
-
-        /* área de login admin */
-        .admin-login-box {
-            background: #f2e9db;
-            border-radius: 30px 8px 30px 8px;
+        /* Área de login admin */
+        .admin-login {
+            background-color: #efe8dc;
+            border-radius: 15px 5px 15px 5px;
             border: 2px solid #1f2c48;
-            padding: 1.2rem;
-            margin: 1rem 0 0.5rem;
+            padding: 20px;
+            margin: 20px 0;
         }
 
-        .admin-login-box h4 {
+        .admin-login h4 {
             color: #1f2c48;
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
+            margin-bottom: 15px;
         }
 
-        .admin-input {
+        .admin-login input {
             width: 100%;
-            padding: 0.7rem 1rem;
+            padding: 12px;
             border: 2px solid #1f2c48;
-            border-radius: 40px;
-            margin-bottom: 0.8rem;
+            border-radius: 30px;
+            margin-bottom: 10px;
             outline: none;
         }
 
         .btn-admin {
-            background: #1f2c48;
+            background-color: #1f2c48;
             color: white;
             border: none;
-            padding: 0.7rem 1.2rem;
-            border-radius: 40px;
-            font-weight: 600;
-            cursor: pointer;
+            padding: 12px;
+            border-radius: 30px;
             width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            cursor: pointer;
+            font-weight: bold;
         }
 
-        .login-feedback {
-            font-size: 0.8rem;
-            margin-top: 0.3rem;
-            color: #1f2c48;
-        }
-
-        /* painel admin de reclamações */
         .admin-panel {
-            background: #f2e9db;
-            border-radius: 30px 8px 30px 8px;
+            background-color: #efe8dc;
+            border-radius: 15px 5px 15px 5px;
             border: 2px solid #1f2c48;
-            padding: 1.2rem;
-            margin-top: 1.5rem;
+            padding: 20px;
+            margin-top: 20px;
             display: none;
         }
 
@@ -410,327 +293,263 @@
             display: block;
         }
 
-        .admin-panel h4 {
-            color: #1f2c48;
-            margin-bottom: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .reclamacoes-lista {
+        .reclamacoes-list {
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
             max-height: 200px;
             overflow-y: auto;
-            background: white;
-            border-radius: 20px;
-            padding: 0.8rem;
-            border: 1px solid #1f2c48;
+            margin-bottom: 10px;
         }
 
         .reclamacao-item {
-            background: #faf6ef;
-            border-radius: 15px;
-            padding: 0.8rem;
-            margin-bottom: 0.5rem;
+            background-color: #fdf8f0;
             border-left: 5px solid #1f2c48;
-            font-size: 0.9rem;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
         }
 
         .reclamacao-item small {
-            color: #4a5b7c;
+            color: #666;
             display: block;
-            margin-top: 0.2rem;
+            margin-top: 5px;
         }
 
         .btn-sair {
-            background: #b6b9c2;
+            background-color: #a0a9bc;
             color: #1f2c48;
             border: none;
-            padding: 0.4rem 1rem;
-            border-radius: 40px;
-            margin-top: 0.8rem;
-            cursor: pointer;
-            font-weight: 600;
+            padding: 10px;
+            border-radius: 30px;
             width: 100%;
+            cursor: pointer;
+            font-weight: bold;
         }
 
-        /* caixa de reclamação pública */
+        /* Caixa de reclamação pública */
         .reclamacao-box {
-            background: #f2e9db;
-            border-radius: 30px 8px 30px 8px;
+            background-color: #efe8dc;
+            border-radius: 15px 5px 15px 5px;
             border: 2px solid #1f2c48;
-            padding: 1.2rem;
-            margin-top: 0.5rem;
-        }
-
-        .reclamacao-box label {
-            font-weight: 600;
-            color: #1f2c48;
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
+            padding: 20px;
         }
 
         .reclamacao-box textarea {
             width: 100%;
+            padding: 12px;
             border: 2px solid #1f2c48;
-            border-radius: 20px;
-            padding: 1rem;
-            font-size: 0.95rem;
+            border-radius: 15px;
+            margin: 10px 0;
             resize: vertical;
-            background: white;
-            margin-bottom: 1rem;
+            outline: none;
         }
 
-        .reclamacao-box button {
-            background: #1f2c48;
+        .btn-reclamar {
+            background-color: #1f2c48;
             color: white;
             border: none;
-            padding: 0.7rem 1.5rem;
-            border-radius: 40px;
-            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 30px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
-            border: 2px solid #1f2c48;
-            width: fit-content;
-        }
-
-        .reclamacao-box button:hover {
-            background: #2c3f64;
+            font-weight: bold;
         }
 
         .feedback-msg {
-            font-size: 0.85rem;
-            margin-top: 0.3rem;
+            margin-top: 10px;
             color: #1f2c48;
             font-style: italic;
         }
 
-        /* lista de registros */
-        .registros-wrapper {
-            margin-top: 1.5rem;
-            border-radius: 1.8rem 0.3rem 1.8rem 0.3rem;
+        /* Tabela de registros */
+        .tabela-card {
+            background-color: #fff9f0;
             border: 2px solid #1f2c48;
+            border-radius: 20px 5px 20px 5px;
             overflow: hidden;
-            background: white;
+            margin-top: 30px;
         }
 
-        .registros-header {
+        .tabela-header {
+            background-color: #1f2c48;
+            color: white;
+            padding: 15px 20px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            background: #1f2c48;
-            padding: 1rem 1.5rem;
-            color: #fff8e7;
-        }
-
-        .registros-header h2 {
-            font-weight: 500;
-            display: flex;
             align-items: center;
-            gap: 10px;
         }
 
         .contador {
-            background: #f5e7d4;
+            background-color: #fdf8f0;
             color: #1f2c48;
-            padding: 0.2rem 1rem;
-            border-radius: 40px;
-            font-weight: 600;
-        }
-
-        .tabela-responsiva {
-            overflow-x: auto;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-weight: bold;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 700px;
         }
 
         th {
-            background: #ece5d9;
+            background-color: #e5decf;
             color: #1f2c48;
-            font-weight: 600;
-            padding: 1rem 1rem;
+            padding: 15px;
             text-align: left;
-            font-size: 0.9rem;
         }
 
         td {
-            padding: 1rem 1rem;
-            border-bottom: 1px solid #ccd3e2;
-            color: #1e2a3a;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        .badge-devolucao {
-            background: #1f2c48;
-            color: #fff3e2;
-            padding: 0.25rem 1rem;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 500;
+            padding: 15px;
+            border-bottom: 1px solid #ccc;
         }
 
         .btn-remover {
             background: transparent;
             border: 2px solid #1f2c48;
             border-radius: 30px;
-            padding: 0.3rem 1.2rem;
+            padding: 5px 15px;
             color: #1f2c48;
-            font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
+            font-weight: bold;
         }
 
         .btn-remover:hover {
-            background: #1f2c48;
+            background-color: #1f2c48;
             color: white;
         }
 
-        .footer-profissional {
-            margin-top: 2.2rem;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            border-top: 2px dashed #1f2c48;
-            padding-top: 1.2rem;
+        .badge {
+            background-color: #1f2c48;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
             color: #1f2c48;
+            border-top: 2px dashed #1f2c48;
+            padding-top: 20px;
         }
 
-        .footer-contato i {
-            margin-right: 6px;
-        }
-
-        .footer-contato span {
-            margin-right: 2rem;
-        }
-
-        @media (max-width: 900px) {
-            .painel-principal {
-                grid-template-columns: 1fr;
-            }
+        .vazio {
+            text-align: center;
+            padding: 40px;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <div class="main-card">
-        <!-- cabeçalho com logo mesclada HYZA -->
-        <div class="top-bar">
-            <div class="logo-area">
-                <div class="logo-hyza">
-                    <span>HYZA</span>
-                </div>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">HYZA</div>
                 <div class="logo-text">
-                    <h1>· SOFT</h1>
-                    <span>gestão inteligente</span>
+                    <h1>SOFT</h1>
+                    <p>gestão profissional</p>
                 </div>
             </div>
-            <div class="badge-sistema">
-                <i class="fas fa-shield-alt" style="margin-right: 6px;"></i>controle v2.0
-            </div>
+            <div class="versao">v2.0</div>
         </div>
 
-        <!-- barra de pesquisa -->
-        <div class="search-section">
-            <div class="search-container">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="Buscar por data, produto, lote ou nome...">
-                <button id="searchBtn"><i class="fas fa-filter"></i> Filtrar</button>
-            </div>
+        <!-- Busca -->
+        <div class="search-box">
+            <input type="text" id="campoBusca" placeholder="Buscar por data, produto, lote ou nome...">
+            <button id="btnBuscar"><i class="fas fa-search"></i> Buscar</button>
         </div>
 
-        <!-- grid principal -->
-        <div class="painel-principal">
-            <!-- coluna esquerda: formulário de adição -->
+        <!-- Grid principal -->
+        <div class="grid-2">
+            <!-- Formulário de registro -->
             <div class="form-card">
-                <h2><i class="fas fa-plus-circle"></i> Novo registro</h2>
-                <div class="campos-grid">
-                    <div class="campo">
-                        <label><i class="far fa-calendar-alt"></i> DATA</label>
-                        <input type="date" id="campoData" value="2026-03-06">
+                <h2><i class="fas fa-plus-circle"></i> Novo Registro</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>DATA</label>
+                        <input type="date" id="data" value="2026-03-06">
                     </div>
-                    <div class="campo">
-                        <label><i class="fas fa-box"></i> PRODUTO</label>
-                        <input type="text" id="campoProduto" placeholder="ex: Notebook">
+                    <div class="form-group">
+                        <label>PRODUTO</label>
+                        <input type="text" id="produto" placeholder="Nome do produto">
                     </div>
-                    <div class="campo">
-                        <label><i class="fas fa-barcode"></i> LOTE</label>
-                        <input type="text" id="campoLote" placeholder="Lote A1">
+                    <div class="form-group">
+                        <label>LOTE</label>
+                        <input type="text" id="lote" placeholder="Nº do lote">
                     </div>
-                    <div class="campo">
-                        <label><i class="fas fa-user"></i> NOME</label>
-                        <input type="text" id="campoNome" placeholder="responsável">
+                    <div class="form-group">
+                        <label>NOME</label>
+                        <input type="text" id="nome" placeholder="Responsável">
                     </div>
-                    <div class="campo">
-                        <label><i class="fas fa-undo-alt"></i> DEVOLUÇÃO</label>
-                        <select id="campoDevolucao">
-                            <option value="não">⛔ Não</option>
-                            <option value="sim">🔁 Sim (devolver)</option>
+                    <div class="form-group">
+                        <label>DEVOLUÇÃO</label>
+                        <select id="devolucao">
+                            <option value="nao">Não</option>
+                            <option value="sim">Sim</option>
                         </select>
                     </div>
                 </div>
-                <button class="btn-adicionar" id="btnAdicionar"><i class="fas fa-save"></i> ADICIONAR INFORMAÇÃO</button>
+                <button class="btn-add" id="btnAdicionar">
+                    <i class="fas fa-save"></i> ADICIONAR
+                </button>
             </div>
 
-            <!-- coluna direita: contato + login admin + reclamação -->
+            <!-- Contato e Admin -->
             <div class="contato-card">
                 <h3><i class="fas fa-headset"></i> Atendimento</h3>
-                <div class="info-contato">
-                    <div class="info-item">
-                        <i class="fas fa-phone-alt"></i>
-                        <a href="tel:+5543988718805">(43) 98871-8805</a>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-envelope"></i>
-                        <a href="mailto:hyza.eng@gmail.com">hyza.eng@gmail.com</a>
-                    </div>
+                
+                <!-- Contatos -->
+                <div class="contato-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <a href="tel:+5543988718805">(43) 98871-8805</a>
+                </div>
+                <div class="contato-item">
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:hyza.eng@gmail.com">hyza.eng@gmail.com</a>
                 </div>
 
-                <!-- Área de login do administrador - SENHA: 283090 -->
-                <div class="admin-login-box">
-                    <h4><i class="fas fa-lock"></i> Acesso admin</h4>
-                    <input type="password" id="adminSenha" class="admin-input" placeholder="Digite a senha">
-                    <button class="btn-admin" id="btnLoginAdmin"><i class="fas fa-sign-in-alt"></i> Entrar</button>
-                    <div class="login-feedback" id="loginFeedback"></div>
+                <!-- Login Admin - SENHA: 283090 -->
+                <div class="admin-login">
+                    <h4><i class="fas fa-lock"></i> Área Restrita</h4>
+                    <input type="password" id="senhaAdmin" placeholder="Digite a senha">
+                    <button class="btn-admin" id="btnLogin">
+                        <i class="fas fa-sign-in-alt"></i> Entrar
+                    </button>
+                    <div id="loginMsg" style="margin-top: 10px; color: #1f2c48;"></div>
                 </div>
 
-                <!-- Painel admin com reclamações (visível apenas após login) -->
-                <div class="admin-panel" id="adminPanel">
-                    <h4><i class="fas fa-comments"></i> Reclamações recebidas</h4>
-                    <div class="reclamacoes-lista" id="reclamacoesLista">
-                        <!-- as reclamações aparecerão aqui -->
-                    </div>
-                    <button class="btn-sair" id="btnSairAdmin"><i class="fas fa-sign-out-alt"></i> Sair</button>
+                <!-- Painel Admin (inicialmente oculto) -->
+                <div class="admin-panel" id="painelAdmin">
+                    <h4><i class="fas fa-comments"></i> Reclamações</h4>
+                    <div class="reclamacoes-list" id="listaReclamacoes"></div>
+                    <button class="btn-sair" id="btnSair">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
                 </div>
 
                 <!-- Caixa de reclamação pública -->
                 <div class="reclamacao-box">
-                    <label for="reclamacaoText"><i class="fas fa-comment-dots"></i> Canal de reclamações</label>
-                    <textarea id="reclamacaoText" rows="2" placeholder="Digite sua mensagem..."></textarea>
-                    <button id="btnReclamar"><i class="fas fa-paper-plane"></i> Enviar</button>
-                    <div class="feedback-msg" id="feedbackReclamacao"></div>
+                    <label><i class="fas fa-comment-dots"></i> Canal de Reclamações</label>
+                    <textarea id="textoReclamacao" rows="3" placeholder="Digite sua reclamação..."></textarea>
+                    <button class="btn-reclamar" id="btnReclamar">
+                        <i class="fas fa-paper-plane"></i> Enviar
+                    </button>
+                    <div class="feedback-msg" id="reclamacaoMsg"></div>
                 </div>
             </div>
         </div>
 
-        <!-- lista de registros -->
-        <div class="registros-wrapper">
-            <div class="registros-header">
-                <h2><i class="fas fa-clipboard-list"></i> Registros ativos</h2>
-                <span class="contador" id="contadorRegistros">0</span>
+        <!-- Tabela de Registros -->
+        <div class="tabela-card">
+            <div class="tabela-header">
+                <h2><i class="fas fa-clipboard-list"></i> Registros Ativos</h2>
+                <span class="contador" id="contador">0</span>
             </div>
-            <div class="tabela-responsiva">
-                <table id="tabelaRegistros">
+            <div style="overflow-x: auto;">
+                <table id="tabela">
                     <thead>
                         <tr>
                             <th>Data</th>
@@ -741,240 +560,268 @@
                             <th>Ação</th>
                         </tr>
                     </thead>
-                    <tbody id="tbodyRegistros"></tbody>
+                    <tbody id="corpoTabela"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- rodapé com contato atualizado -->
-        <div class="footer-profissional">
-            <div class="footer-contato">
-                <i class="fas fa-phone-alt"></i> <span>(43) 98871-8805</span>
-                <i class="fas fa-envelope"></i> <span>hyza.eng@gmail.com</span>
-            </div>
-            <div>HYZA SOFT © 2026 · gestão profissional</div>
+        <!-- Footer -->
+        <div class="footer">
+            <i class="fas fa-phone-alt"></i> (43) 98871-8805 &nbsp;&nbsp; 
+            <i class="fas fa-envelope"></i> hyza.eng@gmail.com &nbsp;&nbsp; 
+            HYZA SOFT © 2026
         </div>
     </div>
 
     <script>
+        // FUNÇÃO PRINCIPAL QUE INICIALIZA TUDO
         (function() {
-            // ---------- DADOS ----------
-            const STORAGE_KEY = 'hyza_profissional';
-            const RECLAMACOES_KEY = 'hyza_reclamacoes';
-            const ADMIN_SENHA = '283090'; // SENHA DEFINIDA PELO USUÁRIO
+            console.log("Iniciando HYZA SOFT...");
 
+            // ========== CONFIGURAÇÕES ==========
+            const ADMIN_SENHA = '283090';
+            
+            // ========== DADOS ==========
             let registros = [];
             let reclamacoes = [];
 
-            // Carregar reclamações do localStorage
-            function carregarReclamacoes() {
+            // ========== CARREGAR DADOS DO LOCALSTORAGE ==========
+            function carregarDados() {
+                // Carregar registros
                 try {
-                    const salvas = localStorage.getItem(RECLAMACOES_KEY);
-                    if (salvas) {
-                        reclamacoes = JSON.parse(salvas);
+                    const regSalvos = localStorage.getItem('hyza_registros');
+                    if (regSalvos) {
+                        registros = JSON.parse(regSalvos);
                     } else {
-                        // reclamações de exemplo
-                        reclamacoes = [
-                            { id: 'r1', texto: 'Produto veio com defeito, quero trocar.', data: '05/03/2026' },
-                            { id: 'r2', texto: 'Atraso na entrega do lote 5532.', data: '04/03/2026' }
-                        ];
-                    }
-                } catch (e) {
-                    reclamacoes = [];
-                }
-                salvarReclamacoes();
-            }
-
-            function salvarReclamacoes() {
-                localStorage.setItem(RECLAMACOES_KEY, JSON.stringify(reclamacoes));
-            }
-
-            // Carregar registros
-            function carregarRegistros() {
-                try {
-                    const salvos = localStorage.getItem(STORAGE_KEY);
-                    if (salvos) {
-                        registros = JSON.parse(salvos);
-                    } else {
+                        // Dados iniciais
                         registros = [
-                            { id: 'd1', data: '2026-03-06', produto: 'Notebook Dell', lote: 'LT-5532', nome: 'Distribuidora A', devolucao: 'não' },
-                            { id: 'd2', data: '2026-03-05', produto: 'Mouse Sem fio', lote: 'LT-987A', nome: 'TechBlue', devolucao: 'não' },
-                            { id: 'd3', data: '2026-03-04', produto: 'Teclado Mecânico', lote: 'KB-777', nome: 'KeyStore', devolucao: 'não' },
+                            { id: '1', data: '2026-03-06', produto: 'Notebook Dell', lote: 'LT-5532', nome: 'Distribuidora A' },
+                            { id: '2', data: '2026-03-05', produto: 'Mouse Sem Fio', lote: 'LT-987A', nome: 'TechBlue' },
+                            { id: '3', data: '2026-03-04', produto: 'Teclado Mecânico', lote: 'KB-777', nome: 'KeyStore' }
                         ];
                     }
                 } catch (e) {
                     registros = [];
                 }
-                registros = registros.filter(item => item.devolucao !== 'sim');
-                ordenarPorData();
-                salvarRegistros();
+
+                // Carregar reclamações
+                try {
+                    const recSalvos = localStorage.getItem('hyza_reclamacoes');
+                    if (recSalvos) {
+                        reclamacoes = JSON.parse(recSalvos);
+                    } else {
+                        reclamacoes = [
+                            { id: 'r1', texto: 'Produto veio com defeito', data: '05/03/2026' },
+                            { id: 'r2', texto: 'Atraso na entrega', data: '04/03/2026' }
+                        ];
+                    }
+                } catch (e) {
+                    reclamacoes = [];
+                }
             }
 
-            function ordenarPorData() {
-                registros.sort((a, b) => (a.data > b.data ? -1 : a.data < b.data ? 1 : 0));
-            }
-
+            // ========== SALVAR DADOS ==========
             function salvarRegistros() {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(registros));
+                localStorage.setItem('hyza_registros', JSON.stringify(registros));
             }
 
-            function atualizarContador() {
-                const cont = document.getElementById('contadorRegistros');
-                if (cont) cont.innerText = registros.length;
+            function salvarReclamacoes() {
+                localStorage.setItem('hyza_reclamacoes', JSON.stringify(reclamacoes));
             }
 
-            function renderizarTabela(itens = registros) {
-                const tbody = document.getElementById('tbodyRegistros');
+            // ========== ORDENAR POR DATA ==========
+            function ordenarRegistros() {
+                registros.sort((a, b) => (a.data > b.data ? -1 : 1));
+            }
+
+            // ========== RENDERIZAR TABELA ==========
+            function renderizarTabela() {
+                const tbody = document.getElementById('corpoTabela');
+                const contador = document.getElementById('contador');
+                
                 if (!tbody) return;
 
-                const ativos = itens.filter(r => r.devolucao !== 'sim');
-                if (ativos.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:2.5rem; color:#3f4e6b;">📭 Nenhum registro ativo. Adicione novos itens.</td></tr>`;
-                } else {
-                    let html = '';
-                    ativos.forEach(item => {
-                        html += `<tr>
+                if (registros.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="vazio">Nenhum registro encontrado</td></tr>';
+                    if (contador) contador.textContent = '0';
+                    return;
+                }
+
+                let html = '';
+                registros.forEach(item => {
+                    html += `
+                        <tr>
                             <td><strong>${item.data}</strong></td>
-                            <td>${item.produto || '—'}</td>
-                            <td>${item.lote || '—'}</td>
-                            <td>${item.nome || '—'}</td>
-                            <td><span class="badge-devolucao">⛔ não</span></td>
-                            <td><button class="btn-remover" data-id="${item.id}"><i class="fas fa-trash-alt"></i> remover</button></td>
-                        </tr>`;
-                    });
-                    tbody.innerHTML = html;
-                }
-
-                document.querySelectorAll('.btn-remover').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const id = e.currentTarget.getAttribute('data-id');
-                        registros = registros.filter(r => r.id !== id);
-                        ordenarPorData();
-                        salvarRegistros();
-                        renderizarTabela();
-                        atualizarContador();
-                    });
+                            <td>${item.produto || '-'}</td>
+                            <td>${item.lote || '-'}</td>
+                            <td>${item.nome || '-'}</td>
+                            <td><span class="badge">Não</span></td>
+                            <td>
+                                <button class="btn-remover" onclick="removerRegistro('${item.id}')">
+                                    <i class="fas fa-trash"></i> Remover
+                                </button>
+                            </td>
+                        </tr>
+                    `;
                 });
-                atualizarContador();
+
+                tbody.innerHTML = html;
+                if (contador) contador.textContent = registros.length;
             }
 
-            function gerarId() {
-                return Date.now() + '-' + Math.random().toString(36).substring(2, 12);
-            }
+            // ========== REMOVER REGISTRO ==========
+            window.removerRegistro = function(id) {
+                registros = registros.filter(r => r.id !== id);
+                salvarRegistros();
+                renderizarTabela();
+            };
 
+            // ========== ADICIONAR REGISTRO ==========
             function adicionarRegistro() {
-                const data = document.getElementById('campoData').value.trim();
-                const produto = document.getElementById('campoProduto').value.trim();
-                const lote = document.getElementById('campoLote').value.trim();
-                const nome = document.getElementById('campoNome').value.trim();
-                const devolucao = document.getElementById('campoDevolucao').value;
+                const data = document.getElementById('data').value;
+                const produto = document.getElementById('produto').value.trim();
+                const lote = document.getElementById('lote').value.trim();
+                const nome = document.getElementById('nome').value.trim();
+                const devolucao = document.getElementById('devolucao').value;
 
+                // Validação
                 if (!data || !produto) {
-                    alert('Por favor, preencha DATA e PRODUTO.');
+                    alert('Preencha DATA e PRODUTO!');
                     return;
                 }
 
+                // Se for devolução = sim, não adiciona
                 if (devolucao === 'sim') {
-                    alert('✅ Item com devolução não foi salvo (removido automaticamente).');
-                    document.getElementById('campoProduto').value = '';
-                    document.getElementById('campoLote').value = '';
-                    document.getElementById('campoNome').value = '';
-                    document.getElementById('campoDevolucao').value = 'não';
+                    alert('Item com devolução NÃO foi adicionado!');
+                    document.getElementById('produto').value = '';
+                    document.getElementById('lote').value = '';
+                    document.getElementById('nome').value = '';
                     return;
                 }
 
-                const novo = {
-                    id: gerarId(),
+                // Criar novo registro
+                const novoRegistro = {
+                    id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
                     data: data,
-                    produto: produto || '(sem produto)',
-                    lote: lote || '(sem lote)',
-                    nome: nome || '(sem nome)',
-                    devolucao: 'não'
+                    produto: produto,
+                    lote: lote || 'Sem lote',
+                    nome: nome || 'Sem nome'
                 };
 
-                registros.push(novo);
-                ordenarPorData();
+                registros.push(novoRegistro);
+                ordenarRegistros();
                 salvarRegistros();
-
-                document.getElementById('campoProduto').value = '';
-                document.getElementById('campoLote').value = '';
-                document.getElementById('campoNome').value = '';
-                document.getElementById('campoDevolucao').value = 'não';
-
                 renderizarTabela();
-                document.getElementById('searchInput').value = '';
+
+                // Limpar campos
+                document.getElementById('produto').value = '';
+                document.getElementById('lote').value = '';
+                document.getElementById('nome').value = '';
+                document.getElementById('devolucao').value = 'nao';
+
+                alert('Registro adicionado com sucesso!');
             }
 
-            function pesquisar(termo) {
+            // ========== PESQUISAR ==========
+            function pesquisar() {
+                const termo = document.getElementById('campoBusca').value.toLowerCase().trim();
+                
                 if (!termo) {
-                    renderizarTabela(registros);
+                    renderizarTabela();
                     return;
                 }
-                const t = termo.toLowerCase();
+
                 const filtrados = registros.filter(item => 
-                    item.data.includes(t) || 
-                    item.produto.toLowerCase().includes(t) || 
-                    item.lote.toLowerCase().includes(t) || 
-                    item.nome.toLowerCase().includes(t)
+                    item.data.includes(termo) || 
+                    item.produto.toLowerCase().includes(termo) ||
+                    (item.lote && item.lote.toLowerCase().includes(termo)) ||
+                    (item.nome && item.nome.toLowerCase().includes(termo))
                 );
-                renderizarTabela(filtrados);
+
+                // Renderizar filtrados
+                const tbody = document.getElementById('corpoTabela');
+                if (filtrados.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="vazio">Nenhum resultado encontrado</td></tr>';
+                    document.getElementById('contador').textContent = registros.length;
+                } else {
+                    let html = '';
+                    filtrados.forEach(item => {
+                        html += `
+                            <tr>
+                                <td><strong>${item.data}</strong></td>
+                                <td>${item.produto}</td>
+                                <td>${item.lote || '-'}</td>
+                                <td>${item.nome || '-'}</td>
+                                <td><span class="badge">Não</span></td>
+                                <td>
+                                    <button class="btn-remover" onclick="removerRegistro('${item.id}')">
+                                        <i class="fas fa-trash"></i> Remover
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    tbody.innerHTML = html;
+                    document.getElementById('contador').textContent = registros.length;
+                }
             }
 
-            // Função para atualizar a lista de reclamações no painel admin
-            function atualizarListaReclamacoes() {
-                const listaDiv = document.getElementById('reclamacoesLista');
-                if (!listaDiv) return;
+            // ========== ATUALIZAR LISTA DE RECLAMAÇÕES ==========
+            function atualizarReclamacoes() {
+                const lista = document.getElementById('listaReclamacoes');
+                if (!lista) return;
 
                 if (reclamacoes.length === 0) {
-                    listaDiv.innerHTML = '<p style="color:#5e6e8c; text-align:center;">Nenhuma reclamação ainda.</p>';
+                    lista.innerHTML = '<p style="text-align:center; color:#666;">Nenhuma reclamação</p>';
                     return;
                 }
 
                 let html = '';
                 reclamacoes.slice().reverse().forEach(rec => {
-                    html += `<div class="reclamacao-item">
-                        <strong>📢 Reclamação</strong><br>
-                        ${rec.texto}<br>
-                        <small>${rec.data}</small>
-                    </div>`;
+                    html += `
+                        <div class="reclamacao-item">
+                            <strong>📢 Reclamação</strong><br>
+                            ${rec.texto}<br>
+                            <small>${rec.data}</small>
+                        </div>
+                    `;
                 });
-                listaDiv.innerHTML = html;
+                lista.innerHTML = html;
             }
 
-            // Login admin - usando a senha 283090
-            document.getElementById('btnLoginAdmin').addEventListener('click', function() {
-                const senha = document.getElementById('adminSenha').value;
-                const feedback = document.getElementById('loginFeedback');
+            // ========== LOGIN ADMIN ==========
+            document.getElementById('btnLogin').addEventListener('click', function() {
+                const senha = document.getElementById('senhaAdmin').value;
+                const msg = document.getElementById('loginMsg');
 
                 if (senha === ADMIN_SENHA) {
-                    document.getElementById('adminPanel').classList.add('visible');
-                    feedback.innerHTML = '✅ Login bem-sucedido';
-                    atualizarListaReclamacoes();
+                    document.getElementById('painelAdmin').classList.add('visible');
+                    msg.innerHTML = '✅ Login efetuado!';
+                    atualizarReclamacoes();
                 } else {
-                    feedback.innerHTML = '❌ Senha incorreta';
+                    msg.innerHTML = '❌ Senha incorreta!';
                 }
             });
 
-            // Sair admin
-            document.getElementById('btnSairAdmin').addEventListener('click', function() {
-                document.getElementById('adminPanel').classList.remove('visible');
-                document.getElementById('adminSenha').value = '';
-                document.getElementById('loginFeedback').innerHTML = '';
+            // ========== SAIR ADMIN ==========
+            document.getElementById('btnSair').addEventListener('click', function() {
+                document.getElementById('painelAdmin').classList.remove('visible');
+                document.getElementById('senhaAdmin').value = '';
+                document.getElementById('loginMsg').innerHTML = '';
             });
 
-            // Enviar reclamação
+            // ========== ENVIAR RECLAMAÇÃO ==========
             document.getElementById('btnReclamar').addEventListener('click', function() {
-                const texto = document.getElementById('reclamacaoText').value.trim();
-                const feedback = document.getElementById('feedbackReclamacao');
+                const texto = document.getElementById('textoReclamacao').value.trim();
+                const msg = document.getElementById('reclamacaoMsg');
 
-                if (texto === '') {
-                    feedback.innerHTML = '⚠️ Digite sua mensagem.';
+                if (!texto) {
+                    msg.innerHTML = '⚠️ Digite sua reclamação!';
                     return;
                 }
 
-                // Criar nova reclamação
                 const novaReclamacao = {
-                    id: gerarId(),
+                    id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
                     texto: texto,
                     data: new Date().toLocaleDateString('pt-BR')
                 };
@@ -982,34 +829,30 @@
                 reclamacoes.push(novaReclamacao);
                 salvarReclamacoes();
 
-                // Limpar campo
-                document.getElementById('reclamacaoText').value = '';
-                feedback.innerHTML = '✅ Reclamação enviada com sucesso!';
+                document.getElementById('textoReclamacao').value = '';
+                msg.innerHTML = '✅ Reclamação enviada!';
 
-                // Se admin estiver logado, atualizar lista
-                if (document.getElementById('adminPanel').classList.contains('visible')) {
-                    atualizarListaReclamacoes();
+                if (document.getElementById('painelAdmin').classList.contains('visible')) {
+                    atualizarReclamacoes();
                 }
 
-                setTimeout(() => { feedback.innerHTML = ''; }, 3000);
+                setTimeout(() => { msg.innerHTML = ''; }, 3000);
             });
 
-            // Inicialização
-            carregarRegistros();
-            carregarReclamacoes();
+            // ========== EVENT LISTENERS ==========
+            document.getElementById('btnAdicionar').addEventListener('click', adicionarRegistro);
+            document.getElementById('btnBuscar').addEventListener('click', pesquisar);
+            
+            document.getElementById('campoBusca').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') pesquisar();
+            });
+
+            // ========== INICIALIZAR ==========
+            carregarDados();
+            ordenarRegistros();
             renderizarTabela();
 
-            // Event listeners
-            document.getElementById('btnAdicionar').addEventListener('click', adicionarRegistro);
-            document.getElementById('searchBtn').addEventListener('click', () => {
-                const termo = document.getElementById('searchInput').value.trim();
-                pesquisar(termo);
-            });
-            document.getElementById('searchInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    pesquisar(e.target.value.trim());
-                }
-            });
+            console.log("Site funcionando!", registros);
         })();
     </script>
 </body>
