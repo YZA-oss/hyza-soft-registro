@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HYZA ENG. SOFTWARE · Plataforma Integrada</title>
+    <!-- Font Awesome e XLSX (mantido) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+        }
+
+        body {
+            background: #eef2f7;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* marca d'agua suave */
+        body::after {
+            content: "HYZA·ENG HYZA·ENG HYZA·ENG HYZA·ENG HYZA·ENG";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-size: 5rem;
+            font-weight: 800;
+            color: rgba(25, 44, 70, 0.04);
+            white-space: nowrap;
+            transform: rotate(180deg);
+            pointer-events: none;
+            z-index: 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .main-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(3px);
+            border-radius: 32px 32px 24px 24px;
+            box-shadow: 0 20px 40px rgba(0, 20, 50, 0.3);
+            border: 2px solid #0e1a2f;
+            position: relative;
+            z-index: 2;
+            overflow: hidden;
+            padding: 0 25px 20px 25px;
+        }
+
+        /* cabeçalho superior */
+        .top-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 0 10px 0;
+            border-bottom: 3px solid #0e1a2f;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-block {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-prateado {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(145deg, #eef2f6, #cad2e0);
+            border-radius: 22px 6px 22px 6px;
+            box-shadow: 6px 6px 0 #9aabca, inset 0 -2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #0e1a2f;
+        }
+
+        .logo-prateado span {
+            font-size: 4.4rem;
+            font-weight: 800;
+            color: #0e1a2f;
+            line-height: 1;
+            margin-top: -8px;
+            text-shadow: 2px 2px 0 #c0cbe0;
+        }
+
+        .site-titulo h1 {
+            font-size: 2.1rem;
+            font-weight: 700;
+            color: #0e1a2f;
+            letter-spacing: 1px;
+            line-height: 1.1;
+        }
+
+        .site-titulo small {
+            display: block;
+            font-size: 0.85rem;
+            color: #2c3f66;
+            font-weight: 400;
+        }
+
+        /* barra de pesquisa principal */
+        .search-global {
+            flex: 1;
+            max-width: 460px;
+            min-width: 250px;
+        }
+
+        .search-bar {
+            display: flex;
+            border: 2px solid #0e1a2f;
+            border-radius: 60px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 14px 22px;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            background: white;
+        }
+
+        .search-bar button {
+            background-color: #0e1a2f;
+            color: white;
+            border: none;
+            padding: 0 28px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-bar button:hover {
+            background-color: #1f3260;
+        }
+
+        /* menu três pontos */
+        .dots-menu {
+            position: relative;
+        }
+
+        .dots-trigger {
+            background: #0e1a2f;
+            color: white;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transition: 0.2s;
+        }
+
+        .dots-trigger:hover {
+            background-color: #1f3260;
+            transform: scale(1.02);
+        }
+
+        .dropdown-conteudo {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 60px;
+            background: white;
+            border: 2px solid #0e1a2f;
+            border-radius: 20px 5px 20px 5px;
+            min-width: 240px;
+            box-shadow: 10px 10px 0 rgba(14,26,47,0.2);
+            z-index: 99;
+            overflow: hidden;
+        }
+
+        .dropdown-conteudo a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 22px;
+            color: #0e1a2f;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid #e0e6f0;
+            transition: 0.2s;
+            font-size: 1.05rem;
+        }
+
+        .dropdown-conteudo a i {
+            width: 24px;
+            color: #0e1a2f;
+        }
+
+        .dropdown-conteudo a:hover {
+            background-color: #eef2f9;
+        }
+
+        .dots-menu:hover .dropdown-conteudo {
+            display: block;
+        }
+
+        /* abas de navegação (filtros / planilha / protocolo) */
+        .tab-bar {
+            display: flex;
+            gap: 8px;
+            margin: 20px 0 10px 0;
+            border-bottom: 2px solid #bdc7db;
+            padding-bottom: 2px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 2px solid transparent;
+            padding: 12px 32px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2c3f66;
+            border-radius: 30px 30px 0 0;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: -2px;
+        }
+
+        .tab-btn i {
+            margin-right: 8px;
+        }
+
+        .tab-btn.ativo {
+            background: white;
+            border-color: #0e1a2f #0e1a2f transparent #0e1a2f;
+            color: #0e1a2f;
+            border-width: 2px 2px 0 2px;
+            border-style: solid;
+            border-radius: 30px 30px 0 0;
+            transform: translateY(-2px);
+        }
+
+        .tab-btn:not(.ativo):hover {
+            background: #d9e2f0;
+            border-color: #8f9fc0;
+        }
+
+        /* conteúdo das abas */
+        .tab-content {
+            display: none;
+            animation: fade 0.25s ease;
+        }
+
+        .tab-content.ativo {
+            display: block;
+        }
+
+        @keyframes fade {
+            from { opacity: 0.3; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== ESTILOS DO FILTRO EXCEL (original adaptado) ========== */
+        .filtro-excel {
+            background: #ffffff;
+            border-radius: 24px 8px 24px 8px;
+            border: 2px solid #0e1a2f;
+            padding: 25px;
+            margin-top: 15px;
+        }
+
+        .upload-section {
+            background: #f8fafd;
+            border: 2px dashed #8f9fc0;
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .upload-btn {
+            background: #0e1a2f;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 15px;
+            border: none;
+        }
+
+        .upload-btn:hover {
+            background: #1f3260;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-info {
+            margin-top: 12px;
+            color: #2c3f66;
+        }
+
+        .filters-section {
+            background: #f8fafd;
+            border-radius: 18px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #0e1a2f;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .filter-group select, .filter-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #b2c0da;
+            border-radius: 30px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #0e1a2f;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1f3260;
+        }
+
+        .btn-secondary {
+            background: #bdc7db;
+            color: #0e1a2f;
+        }
+
+        .btn-secondary:hover {
+            background: #a5b2cc;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 2px solid #0e1a2f;
+            margin-top: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #0e1a2f;
+            color: white;
+            padding: 15px;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #d0daec;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #5f6f92;
+        }
+
+        .status {
+            text-align: center;
+            padding: 12px;
+            border-radius: 40px;
+            margin: 20px 0;
+            display: none;
+            font-weight: 600;
+        }
+
+        .status.success {
+            background: #dff0d8;
+            color: #1f4f2b;
+            border: 1px solid #2e7d32;
+        }
+
+        .status.error {
+            background: #f8dddd;
+            color: #a12525;
+        }
+
+        .export-section {
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        /* ========== ESTILOS PROTOCOLO RETIRADA (HYZA.6) ========== */
+        .protocolo-hyza {
+            background: #ffffff;
+            border-radius: 24px 8px 24px 8px;
+            border: 2px solid #0e1a2f;
+            padding: 25px;
+            margin-top: 15px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-card {
+            background: #f8fafd;
+            border: 2px solid #0e1a2f;
+            border-radius: 20px 5px 20px 5px;
+            padding: 25px;
+            box-shadow: 8px 8px 0 #c5d0e5;
+        }
+
+        .form-card h2 {
+            color: #0e1a2f;
+            border-left: 8px solid #0e1a2f;
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-weight: 700;
+            color: #0e1a2f;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select {
+            padding: 12px;
+            border: 2px solid #0e1a2f;
+            border-radius: 20px;
+            outline: none;
+            background: white;
+        }
+
+        .btn-add {
+            background-color: #0e1a2f;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.2rem;
+        }
+
+        .contato-card {
+            background: #f8fafd;
+            border: 2px solid #0e1a2f;
+            border-radius: 20px 5px 20px 5px;
+            padding: 25px;
+            box-shadow: 8px 8px 0 #c5d0e5;
+        }
+
+        .contato-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background-color: #e5ecf5;
+            padding: 12px 18px;
+            border-radius: 40px;
+            margin-bottom: 12px;
+            border: 1px solid #0e1a2f;
+        }
+
+        .admin-login {
+            background-color: #e5ecf5;
+            border-radius: 15px 5px 15px 5px;
+            border: 2px solid #0e1a2f;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .admin-login input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #0e1a2f;
+            border-radius: 30px;
+            margin-bottom: 10px;
+        }
+
+        .btn-admin, .btn-sair, .btn-reclamar {
+            background-color: #0e1a2f;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-sair {
+            background-color: #7f8fb2;
+        }
+
+        .reclamacao-box {
+            background-color: #e5ecf5;
+            border-radius: 15px 5px 15px 5px;
+            border: 2px solid #0e1a2f;
+            padding: 20px;
+        }
+
+        .reclamacao-box textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #0e1a2f;
+            border-radius: 15px;
+            margin: 10px 0;
+        }
+
+        .tabela-card {
+            background-color: white;
+            border: 2px solid #0e1a2f;
+            border-radius: 20px 5px 20px 5px;
+            overflow: hidden;
+            margin-top: 30px;
+        }
+
+        .tabela-header {
+            background-color: #0e1a2f;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .badge {
+            background-color: #0e1a2f;
+            color: white;
+            padding: 4px 14px;
+            border-radius: 30px;
+        }
+
+        .btn-remover {
+            background: transparent;
+            border: 2px solid #0e1a2f;
+            border-radius: 30px;
+            padding: 5px 15px;
+            color: #0e1a2f;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-remover:hover {
+            background-color: #0e1a2f;
+            color: white;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #0e1a2f;
+            border-top: 2px dashed #0e1a2f;
+            padding-top: 20px;
+        }
+
+        .vazio {
+            text-align: center;
+            padding: 40px;
+            color: #5f6f92;
+        }
+    </style>
+</head>
+<body>
+<div class="main-wrapper">
+    <!-- topo com logo, pesquisa e três pontos -->
+    <div class="top-header">
+        <div class="logo-block">
+            <div class="logo-prateado"><span>H</span></div>
+            <div class="site-titulo">
+                <h1>HYZA ENG. SOFTWARE</h1>
+                <small>gestão & inteligência</small>
+            </div>
+        </div>
+        <div class="search-global">
+            <div class="search-bar">
+                <input type="text" id="searchGlobalInput" placeholder="Com oque podemos te ajudar hoje?">
+                <button id="searchGlobalBtn"><i class="fas fa-search"></i> Buscar</button>
+            </div>
+        </div>
+        <div class="dots-menu">
+            <div class="dots-trigger"><i class="fas fa-ellipsis-h"></i></div>
+            <div class="dropdown-conteudo">
+                <a href="#" id="sobreHyzaLink"><i class="fas fa-info-circle"></i> Sobre HYZA</a>
+                <a href="#" id="portalReclamacoesLink"><i class="fas fa-comment-dots"></i> Portal Reclamações</a>
+                <a href="#" id="contatoLink"><i class="fas fa-headset"></i> Contato</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- abas: filtros / planilha / protocolo retirada -->
+    <div class="tab-bar">
+        <button class="tab-btn ativo" data-tab="filtros"><i class="fas fa-filter"></i> Filtros</button>
+        <button class="tab-btn" data-tab="planilha"><i class="fas fa-file-excel"></i> Planilha</button>
+        <button class="tab-btn" data-tab="protocolo"><i class="fas fa-clipboard-list"></i> Protocolo Retirada</button>
+    </div>
+
+    <!-- Conteúdo da aba Filtros (Excel) - visível inicialmente -->
+    <div id="tab-filtros" class="tab-content ativo">
+        <div class="filtro-excel">
+            <div class="upload-section">
+                <h3><i class="fas fa-cloud-upload-alt"></i> Upload de planilha Excel</h3>
+                <p>.xlsx, .xls</p>
+                <label for="fileInput" class="upload-btn">Selecionar Arquivo</label>
+                <input type="file" id="fileInput" accept=".xlsx, .xls">
+                <div class="file-info" id="fileInfo">Nenhum arquivo</div>
+            </div>
+            <div class="status" id="statusMessage"></div>
+            <div class="filters-section" id="filtersSection" style="display:none">
+                <h3>Filtros</h3>
+                <div class="filter-row" id="filterRow"></div>
+                <div class="actions">
+                    <button class="btn btn-secondary" id="resetFilters">Limpar</button>
+                    <button class="btn btn-primary" id="applyFilters">Aplicar</button>
+                </div>
+            </div>
+            <div class="table-container" id="tableContainer" style="display:none">
+                <table id="dataTable">
+                    <thead id="tableHeader"></thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+            <div class="export-section" id="exportSection" style="display:none">
+                <button class="btn btn-primary" id="exportBtn">Exportar filtrados</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conteúdo da aba Planilha (pode ser o mesmo do filtro, apenas uma cópia) -->
+    <div id="tab-planilha" class="tab-content">
+        <div class="filtro-excel">
+            <h3 style="margin-bottom:15px"><i class="fas fa-table"></i> Visualizador de Planilha</h3>
+            <p style="margin-bottom:20px">Utilize a aba "Filtros" para carregar e manipular planilhas. Os dados carregados aparecem abaixo.</p>
+            <div class="table-container" id="planilhaTableContainer" style="display:block; border:2px solid #0e1a2f; min-height:200px">
+                <table>
+                    <thead><tr><th>Para visualizar, vá em "Filtros" e faça upload</th></tr></thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conteúdo da aba Protocolo Retirada (cópia fiel do HYZA.6) -->
+    <div id="tab-protocolo" class="tab-content">
+        <div class="protocolo-hyza">
+            <div class="grid-2">
+                <!-- Formulário de registro -->
+                <div class="form-card">
+                    <h2><i class="fas fa-plus-circle"></i> Novo Registro</h2>
+                    <div class="form-grid">
+                        <div class="form-group"><label>DATA</label><input type="date" id="data" value="2026-03-06"></div>
+                        <div class="form-group"><label>PRODUTO</label><input type="text" id="produto" placeholder="Produto"></div>
+                        <div class="form-group"><label>LOTE</label><input type="text" id="lote" placeholder="Lote"></div>
+                        <div class="form-group"><label>NOME</label><input type="text" id="nome" placeholder="Responsável"></div>
+                        <div class="form-group"><label>DEVOLUÇÃO</label>
+                            <select id="devolucao"><option value="nao">Não</option><option value="sim">Sim</option></select>
+                        </div>
+                    </div>
+                    <button class="btn-add" id="btnAdicionar"><i class="fas fa-save"></i> ADICIONAR</button>
+                </div>
+
+                <!-- Contato e admin -->
+                <div class="contato-card">
+                    <h3><i class="fas fa-headset"></i> Atendimento</h3>
+                    <div class="contato-item"><i class="fas fa-phone-alt"></i> <a href="tel:+5543988718805">(43) 98871-8805</a></div>
+                    <div class="contato-item"><i class="fas fa-envelope"></i> <a href="mailto:hyza.eng@gmail.com">hyza.eng@gmail.com</a></div>
+
+                    <div class="admin-login">
+                        <h4><i class="fas fa-lock"></i> Área Restrita</h4>
+                        <input type="password" id="senhaAdmin" placeholder="Senha">
+                        <button class="btn-admin" id="btnLogin"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+                        <div id="loginMsg" style="margin-top:8px;color:#0e1a2f;"></div>
+                    </div>
+
+                    <div class="admin-panel" id="painelAdmin" style="display:none;">
+                        <h4><i class="fas fa-comments"></i> Reclamações</h4>
+                        <div class="reclamacoes-list" id="listaReclamacoes"></div>
+                        <button class="btn-sair" id="btnSair"><i class="fas fa-sign-out-alt"></i> Sair</button>
+                    </div>
+
+                    <div class="reclamacao-box">
+                        <label><i class="fas fa-comment-dots"></i> Canal de Reclamações</label>
+                        <textarea id="textoReclamacao" rows="3" placeholder="Digite sua reclamação..."></textarea>
+                        <button class="btn-reclamar" id="btnReclamar"><i class="fas fa-paper-plane"></i> Enviar</button>
+                        <div class="feedback-msg" id="reclamacaoMsg"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de registros -->
+            <div class="tabela-card">
+                <div class="tabela-header">
+                    <h2><i class="fas fa-clipboard-list"></i> Registros Ativos</h2>
+                    <span class="contador" id="contador">0</span>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table id="tabela">
+                        <thead><tr><th>Data</th><th>Produto</th><th>Lote</th><th>Nome</th><th>Devolução</th><th>Ação</th></tr></thead>
+                        <tbody id="corpoTabela"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="footer"><i class="fas fa-phone-alt"></i> (43) 98871-8805 · hyza.eng@gmail.com · H HYZA ENG © 2026</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ------------------- DADOS GLOBAIS (protocolo) -------------------
+        let registros = [];
+        let reclamacoes = [];
+        const ADMIN_SENHA = '283090';
+
+        // Carregar localStorage
+        function carregarDadosProtocolo() {
+            try {
+                const reg = localStorage.getItem('hyza_registros');
+                registros = reg ? JSON.parse(reg) : [
+                    { id: '1', data: '2026-03-06', produto: 'Notebook Dell', lote: 'LT-5532', nome: 'Distribuidora A' },
+                    { id: '2', data: '2026-03-05', produto: 'Mouse Sem Fio', lote: 'LT-987A', nome: 'TechBlue' },
+                    { id: '3', data: '2026-03-04', produto: 'Teclado Mecânico', lote: 'KB-777', nome: 'KeyStore' }
+                ];
+            } catch { registros = []; }
+            try {
+                const rec = localStorage.getItem('hyza_reclamacoes');
+                reclamacoes = rec ? JSON.parse(rec) : [
+                    { id: 'r1', texto: 'Produto veio com defeito', data: '05/03/2026' },
+                    { id: 'r2', texto: 'Atraso na entrega', data: '04/03/2026' }
+                ];
+            } catch { reclamacoes = []; }
+        }
+
+        function salvarRegistros() { localStorage.setItem('hyza_registros', JSON.stringify(registros)); }
+        function salvarReclamacoes() { localStorage.setItem('hyza_reclamacoes', JSON.stringify(reclamacoes)); }
+
+        function ordenarRegistros() { registros.sort((a,b)=> (a.data > b.data ? -1 : 1)); }
+
+        function renderizarTabelaProtocolo() {
+            const tbody = document.getElementById('corpoTabela');
+            const contador = document.getElementById('contador');
+            if (!tbody) return;
+            if (!registros.length) {
+                tbody.innerHTML = '<tr><td colspan="6" class="vazio">Nenhum registro</td></tr>';
+                if (contador) contador.textContent = '0';
+                return;
+            }
+            let html = '';
+            registros.forEach(item => {
+                html += `<tr><td><strong>${item.data}</strong></td><td>${item.produto || '-'}</td><td>${item.lote || '-'}</td><td>${item.nome || '-'}</td><td><span class="badge">Não</span></td><td><button class="btn-remover" onclick="removerRegistro('${item.id}')"><i class="fas fa-trash"></i> Remover</button></td></tr>`;
+            });
+            tbody.innerHTML = html;
+            if (contador) contador.textContent = registros.length;
+        }
+
+        window.removerRegistro = function(id) {
+            registros = registros.filter(r => r.id !== id);
+            salvarRegistros();
+            renderizarTabelaProtocolo();
+        };
+
+        function adicionarRegistro() {
+            const data = document.getElementById('data').value;
+            const produto = document.getElementById('produto').value.trim();
+            const lote = document.getElementById('lote').value.trim();
+            const nome = document.getElementById('nome').value.trim();
+            const devolucao = document.getElementById('devolucao').value;
+            if (!data || !produto) { alert('Preencha DATA e PRODUTO!'); return; }
+            if (devolucao === 'sim') {
+                alert('Item com devolução NÃO adicionado');
+                document.getElementById('produto').value = ''; document.getElementById('lote').value = ''; document.getElementById('nome').value = '';
+                return;
+            }
+            const novo = { id: Date.now() + '-' + Math.random().toString(36).substr(2,9), data, produto, lote: lote || 'Sem lote', nome: nome || 'Sem nome' };
+            registros.push(novo); ordenarRegistros(); salvarRegistros(); renderizarTabelaProtocolo();
+            document.getElementById('produto').value = ''; document.getElementById('lote').value = ''; document.getElementById('nome').value = ''; document.getElementById('devolucao').value = 'nao';
+            alert('Registro adicionado!');
+        }
+
+        function atualizarReclamacoesAdmin() {
+            const lista = document.getElementById('listaReclamacoes');
+            if (!lista) return;
+            if (!reclamacoes.length) { lista.innerHTML = '<p style="text-align:center;">Nenhuma reclamação</p>'; return; }
+            let html = '';
+            reclamacoes.slice().reverse().forEach(r => { html += `<div class="reclamacao-item"><strong>📢 Reclamação</strong><br>${r.texto}<br><small>${r.data}</small></div>`; });
+            lista.innerHTML = html;
+        }
+
+        // ---------- EXCEL (filtro) ----------
+        let excelData = [], filteredData = [], columns = [];
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const statusMsg = document.getElementById('statusMessage');
+        const filtersSection = document.getElementById('filtersSection');
+        const filterRow = document.getElementById('filterRow');
+        const resetFilters = document.getElementById('resetFilters');
+        const applyFilters = document.getElementById('applyFilters');
+        const tableContainer = document.getElementById('tableContainer');
+        const tableHeader = document.getElementById('tableHeader');
+        const tableBody = document.getElementById('tableBody');
+        const exportSection = document.getElementById('exportSection');
+        const exportBtn = document.getElementById('exportBtn');
+
+        function showStatus(msg, type) {
+            statusMsg.textContent = msg; statusMsg.className = `status ${type}`; statusMsg.style.display = 'block';
+            setTimeout(()=> statusMsg.style.display='none', 4000);
+        }
+
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (!file.name.match(/\.(xlsx|xls)$/)) { showStatus('Arquivo inválido','error'); return; }
+            fileInfo.textContent = `Arquivo: ${file.name}`;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                try {
+                    const data = new Uint8Array(ev.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                    if (!json.length) { showStatus('Planilha vazia','error'); return; }
+                    columns = json[0];
+                    excelData = [];
+                    for (let i=1; i<json.length; i++) {
+                        let obj = {};
+                        for (let j=0; j<columns.length; j++) obj[columns[j]] = json[i][j] !== undefined ? json[i][j] : '';
+                        excelData.push(obj);
+                    }
+                    filteredData = [...excelData];
+                    filterRow.innerHTML = '';
+                    columns.forEach(col => {
+                        let div = document.createElement('div'); div.className = 'filter-group';
+                        div.innerHTML = `<label>${col}</label><select id="filter-${col}" data-column="${col}"><option value="">Todos</option></select>`;
+                        let unique = [...new Set(excelData.map(r=>r[col]))].filter(v=>v!=='');
+                        let select = div.querySelector('select');
+                        unique.forEach(v => { let opt = document.createElement('option'); opt.value=v; opt.textContent=v; select.appendChild(opt); });
+                        filterRow.appendChild(div);
+                    });
+                    renderTable();
+                    filtersSection.style.display = 'block'; tableContainer.style.display = 'block'; exportSection.style.display = 'block';
+                    showStatus('Carregado com sucesso','success');
+                } catch (er) { showStatus('Erro no processamento','error'); }
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
+        function renderTable() {
+            tableHeader.innerHTML = ''; tableBody.innerHTML = '';
+            let thr = document.createElement('tr');
+            columns.forEach(c => { let th = document.createElement('th'); th.textContent = c; thr.appendChild(th); });
+            tableHeader.appendChild(thr);
+            if (!filteredData.length) {
+                let row = document.createElement('tr');
+                let td = document.createElement('td'); td.colSpan = columns.length; td.className = 'no-data'; td.textContent = 'Nenhum dado';
+                row.appendChild(td); tableBody.appendChild(row);
+            } else {
+                filteredData.forEach(r => {
+                    let tr = document.createElement('tr');
+                    columns.forEach(c => { let td = document.createElement('td'); td.textContent = r[c] !== undefined ? r[c] : ''; tr.appendChild(td); });
+                    tableBody.appendChild(tr);
+                });
+            }
+        }
+
+        resetFilters.addEventListener('click', ()=>{
+            if (!columns.length) return;
+            columns.forEach(c => { let el = document.getElementById(`filter-${c}`); if (el) el.value = ''; });
+            filteredData = [...excelData]; renderTable(); showStatus('Filtros resetados','success');
+        });
+
+        applyFilters.addEventListener('click', ()=>{
+            filteredData = [...excelData];
+            columns.forEach(c => {
+                let el = document.getElementById(`filter-${c}`);
+                if (el && el.value) filteredData = filteredData.filter(row => String(row[c]).toLowerCase().includes(el.value.toLowerCase()));
+            });
+            renderTable(); showStatus(`Filtrados: ${filteredData.length} registros`,'success');
+        });
+
+        exportBtn.addEventListener('click', ()=>{
+            if (!filteredData.length) { showStatus('Nada a exportar','error'); return; }
+            try {
+                const ws = XLSX.utils.json_to_sheet(filteredData);
+                const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Filtrados");
+                XLSX.writeFile(wb, "dados_filtrados.xlsx"); showStatus('Exportado','success');
+            } catch { showStatus('Erro export','error'); }
+        });
+
+        // ---------- LOGIN ADMIN / RECLAMAÇÕES ----------
+        document.addEventListener('click', function(e) {
+            if (e.target.id === 'btnLogin') {
+                const senha = document.getElementById('senhaAdmin').value;
+                const msg = document.getElementById('loginMsg');
+                if (senha === ADMIN_SENHA) {
+                    document.getElementById('painelAdmin').style.display = 'block';
+                    msg.innerHTML = '✅ Login OK';
+                    atualizarReclamacoesAdmin();
+                } else msg.innerHTML = '❌ Senha incorreta';
+            }
+            if (e.target.id === 'btnSair') {
+                document.getElementById('painelAdmin').style.display = 'none';
+                document.getElementById('senhaAdmin').value = '';
+                document.getElementById('loginMsg').innerHTML = '';
+            }
+            if (e.target.id === 'btnReclamar') {
+                const texto = document.getElementById('textoReclamacao').value.trim();
+                const msg = document.getElementById('reclamacaoMsg');
+                if (!texto) { msg.innerHTML = 'Digite a reclamação'; return; }
+                const nova = { id: Date.now()+'-'+Math.random(), texto, data: new Date().toLocaleDateString('pt-BR') };
+                reclamacoes.push(nova); salvarReclamacoes();
+                document.getElementById('textoReclamacao').value = '';
+                msg.innerHTML = '✅ Enviada';
+                if (document.getElementById('painelAdmin').style.display === 'block') atualizarReclamacoesAdmin();
+                setTimeout(()=> msg.innerHTML='',2500);
+            }
+        });
+
+        document.getElementById('btnAdicionar').addEventListener('click', adicionarRegistro);
+        document.getElementById('btnBuscar')?.addEventListener('click', function(){
+            const termo = document.getElementById('campoBusca')?.value.toLowerCase() || '';
+            if (!termo) { renderizarTabelaProtocolo(); return; }
+            const filtrados = registros.filter(r => r.data.includes(termo) || r.produto.toLowerCase().includes(termo) || (r.lote && r.lote.toLowerCase().includes(termo)) || (r.nome && r.nome.toLowerCase().includes(termo)));
+            const tbody = document.getElementById('corpoTabela');
+            if (!filtrados.length) tbody.innerHTML = '<tr><td colspan="6" class="vazio">Nenhum</td></tr>';
+            else {
+                let html = '';
+                filtrados.forEach(item => { html += `<tr><td>${item.data}</td><td>${item.produto}</td><td>${item.lote||'-'}</td><td>${item.nome||'-'}</td><td><span class="badge">Não</span></td><td><button class="btn-remover" onclick="removerRegistro('${item.id}')"><i class="fas fa-trash"></i> Remover</button></td></tr>`; });
+                tbody.innerHTML = html;
+            }
+        });
+
+        // ---------- INICIALIZAÇÃO ----------
+        carregarDadosProtocolo();
+        ordenarRegistros();
+        renderizarTabelaProtocolo();
+
+        // Abas
+        const tabs = document.querySelectorAll('.tab-btn');
+        const contents = document.querySelectorAll('.tab-content');
+        tabs.forEach(t => {
+            t.addEventListener('click', (e) => {
+                tabs.forEach(btn => btn.classList.remove('ativo'));
+                t.classList.add('ativo');
+                contents.forEach(c => c.classList.remove('ativo'));
+                const target = 'tab-' + t.dataset.tab;
+                document.getElementById(target)?.classList.add('ativo');
+            });
+        });
+
+        // Links do menu (simulação)
+        document.getElementById('sobreHyzaLink').addEventListener('click', (e) => { e.preventDefault(); alert('HYZA ENG. SOFTWARE - Soluções em gestão e qualidade.'); });
+        document.getElementById('portalReclamacoesLink').addEventListener('click', (e) => { e.preventDefault(); document.querySelector('[data-tab="protocolo"]').click(); document.getElementById('textoReclamacao')?.scrollIntoView(); });
+        document.getElementById('contatoLink').addEventListener('click', (e) => { e.preventDefault(); alert('Contato: (43) 98871-8805 | hyza.eng@gmail.com'); });
+
+        // Pesquisa global (simples alert)
+        document.getElementById('searchGlobalBtn').addEventListener('click', ()=>{
+            const val = document.getElementById('searchGlobalInput').value;
+            alert(`Busca global por: "${val}" (integração futura)`);
+        });
+    })();
+</script>
+
+<!-- pequeno ajuste painel admin -->
+<style>
+    .admin-panel.visible { display: block; }
+    #painelAdmin { display: none; }
+    #painelAdmin.visible { display: block; }
+</style>
+</body>
+</html>
