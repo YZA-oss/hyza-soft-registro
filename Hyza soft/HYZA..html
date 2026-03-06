@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HYZA-SOFT · Gestão profissional</title>
-    <!-- Font Awesome 6 (gratuito) para ícones modernos -->
+    <title>HYZA SOFT · Gestão profissional</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
@@ -15,7 +14,7 @@
         }
 
         body {
-            background-color: #faf6ef;  /* creme suave */
+            background-color: #faf6ef;
             position: relative;
             min-height: 100vh;
             display: flex;
@@ -24,7 +23,7 @@
             padding: 2rem 1.5rem;
         }
 
-        /* watermark vertical mais elegante, menos intrusivo */
+        /* watermark vertical */
         body::before {
             content: "";
             position: fixed;
@@ -39,7 +38,7 @@
         }
 
         body::after {
-            content: "HYZA-SOFT  HYZA-SOFT  HYZA-SOFT  HYZA-SOFT  HYZA-SOFT  HYZA-SOFT  HYZA-SOFT  HYZA-SOFT";
+            content: "HYZA-SOFT  HYZA-SOFT  HYZA-SOFT  HYZA-SOFT  HYZA-SOFT  HYZA-SOFT";
             position: fixed;
             top: 0;
             left: 0;
@@ -68,7 +67,7 @@
             position: relative;
             z-index: 10;
             width: 100%;
-            max-width: 1300px;
+            max-width: 1400px;
             background: rgba(255, 251, 242, 0.92);
             backdrop-filter: blur(3px);
             border-radius: 2rem 1rem 2rem 1rem;
@@ -77,7 +76,7 @@
             border: 1px solid #dce3ed;
         }
 
-        /* cabeçalho refinado */
+        /* cabeçalho com logo HYZA mesclada */
         .top-bar {
             display: flex;
             flex-wrap: wrap;
@@ -94,18 +93,28 @@
             gap: 1rem;
         }
 
-        .logo-icon {
+        /* Logo customizada mesclando H Y Z A */
+        .logo-hyza {
             background: #1f2c48;
-            width: 48px;
-            height: 48px;
-            border-radius: 16px 4px 16px 4px;
+            width: 60px;
+            height: 60px;
+            border-radius: 18px 4px 18px 4px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 6px 6px 0 #b9c2d4;
+            position: relative;
+        }
+
+        .logo-hyza span {
             color: #fff3e0;
-            font-size: 1.8rem;
-            font-weight: 600;
-            box-shadow: 4px 4px 0 #b9c2d4;
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -3px;
+            transform: scale(1.1);
+            display: inline-block;
+            text-shadow: 1px 1px 0 #0f1a2c;
+            font-family: 'Poppins', 'Inter', sans-serif;
         }
 
         .logo-text h1 {
@@ -192,15 +201,15 @@
             transform: scale(1.02);
         }
 
-        /* grid dois painéis: formulário + contatos laterais (visual clean) */
-        .painel-dois {
+        /* grid principal */
+        .painel-principal {
             display: grid;
-            grid-template-columns: 1fr 280px;
+            grid-template-columns: 1fr 320px;
             gap: 2rem;
             margin-bottom: 2.5rem;
         }
 
-        /* formulário com cartão elegante */
+        /* formulário */
         .form-card {
             background: rgba(255, 250, 240, 0.7);
             border: 2px solid #1f2c48;
@@ -284,7 +293,7 @@
             transform: translateY(-2px);
         }
 
-        /* bloco de contato / reclamações (mais profissional) */
+        /* card de contato + login admin */
         .contato-card {
             background: #ffffffd9;
             border: 2px solid #1f2c48;
@@ -342,7 +351,110 @@
             text-decoration: underline;
         }
 
-        /* caixa de reclamação (estilo field) */
+        /* área de login admin (inicialmente oculta) */
+        .admin-login-box {
+            background: #f2e9db;
+            border-radius: 30px 8px 30px 8px;
+            border: 2px solid #1f2c48;
+            padding: 1.2rem;
+            margin: 1rem 0 0.5rem;
+        }
+
+        .admin-login-box h4 {
+            color: #1f2c48;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .admin-input {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border: 2px solid #1f2c48;
+            border-radius: 40px;
+            margin-bottom: 0.8rem;
+            outline: none;
+        }
+
+        .btn-admin {
+            background: #1f2c48;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .login-feedback {
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+            color: #1f2c48;
+        }
+
+        /* painel admin de reclamações (inicialmente oculto) */
+        .admin-panel {
+            background: #f2e9db;
+            border-radius: 30px 8px 30px 8px;
+            border: 2px solid #1f2c48;
+            padding: 1.2rem;
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .admin-panel.visible {
+            display: block;
+        }
+
+        .admin-panel h4 {
+            color: #1f2c48;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reclamacoes-lista {
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 20px;
+            padding: 0.8rem;
+            border: 1px solid #1f2c48;
+        }
+
+        .reclamacao-item {
+            background: #faf6ef;
+            border-radius: 15px;
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            border-left: 5px solid #1f2c48;
+            font-size: 0.9rem;
+        }
+
+        .reclamacao-item small {
+            color: #4a5b7c;
+            display: block;
+            margin-top: 0.2rem;
+        }
+
+        .btn-sair {
+            background: #b6b9c2;
+            color: #1f2c48;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            margin-top: 0.8rem;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        /* caixa de reclamação pública */
         .reclamacao-box {
             background: #f2e9db;
             border-radius: 30px 8px 30px 8px;
@@ -397,7 +509,7 @@
             font-style: italic;
         }
 
-        /* lista de registros profissional */
+        /* lista de registros */
         .registros-wrapper {
             margin-top: 1.5rem;
             border-radius: 1.8rem 0.3rem 1.8rem 0.3rem;
@@ -484,7 +596,6 @@
             color: white;
         }
 
-        /* rodapé com email e telefone (reforço) */
         .footer-profissional {
             margin-top: 2.2rem;
             display: flex;
@@ -504,9 +615,8 @@
             margin-right: 2rem;
         }
 
-        /* responsividade */
         @media (max-width: 900px) {
-            .painel-dois {
+            .painel-principal {
                 grid-template-columns: 1fr;
             }
         }
@@ -514,17 +624,19 @@
 </head>
 <body>
     <div class="main-card">
-        <!-- cabeçalho profissional -->
+        <!-- cabeçalho com logo mesclada HYZA -->
         <div class="top-bar">
             <div class="logo-area">
-                <div class="logo-icon">H</div>
+                <div class="logo-hyza">
+                    <span>HYZA</span>
+                </div>
                 <div class="logo-text">
-                    <h1>HYZA·SOFT</h1>
+                    <h1>· SOFT</h1>
                     <span>gestão inteligente</span>
                 </div>
             </div>
             <div class="badge-sistema">
-                <i class="fas fa-shield-alt" style="margin-right: 6px;"></i>controle v1.0
+                <i class="fas fa-shield-alt" style="margin-right: 6px;"></i>controle v2.0
             </div>
         </div>
 
@@ -537,8 +649,8 @@
             </div>
         </div>
 
-        <!-- área principal com dois painéis: form + contato/reclamação -->
-        <div class="painel-dois">
+        <!-- grid principal -->
+        <div class="painel-principal">
             <!-- coluna esquerda: formulário de adição -->
             <div class="form-card">
                 <h2><i class="fas fa-plus-circle"></i> Novo registro</h2>
@@ -570,28 +682,44 @@
                 <button class="btn-adicionar" id="btnAdicionar"><i class="fas fa-save"></i> ADICIONAR INFORMAÇÃO</button>
             </div>
 
-            <!-- coluna direita: contato profissional e caixa de reclamação -->
+            <!-- coluna direita: contato + login admin + reclamação -->
             <div class="contato-card">
                 <h3><i class="fas fa-headset"></i> Atendimento</h3>
                 <div class="info-contato">
                     <div class="info-item">
-                        <i class="fas fa-envelope"></i>
-                        <a href="mailto:contato@hyzasoft.com">contato@hyza.eng@gmailcom</a>
+                        <i class="fas fa-phone-alt"></i>
+                        <a href="tel:+5543988718805">(43) 98871-8805</a>
                     </div>
                     <div class="info-item">
-                        <i class="fas fa-phone-alt"></i>
-                        <a href="tel:+5511999999999">(43) 9 8871-8805</a>
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:hyza.eng@gmail.com">hyza.eng@gmail.com</a>
                     </div>
                 </div>
 
-                <!-- caixa de reclamação / feedback -->
+                <!-- Área de login do administrador -->
+                <div class="admin-login-box">
+                    <h4><i class="fas fa-lock"></i> Acesso admin</h4>
+                    <input type="password" id="adminSenha" class="admin-input" placeholder="Digite a senha">
+                    <button class="btn-admin" id="btnLoginAdmin"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+                    <div class="login-feedback" id="loginFeedback"></div>
+                </div>
+
+                <!-- Painel admin com reclamações (visível apenas após login) -->
+                <div class="admin-panel" id="adminPanel">
+                    <h4><i class="fas fa-comments"></i> Reclamações recebidas</h4>
+                    <div class="reclamacoes-lista" id="reclamacoesLista">
+                        <!-- as reclamações aparecerão aqui -->
+                    </div>
+                    <button class="btn-sair" id="btnSairAdmin"><i class="fas fa-sign-out-alt"></i> Sair</button>
+                </div>
+
+                <!-- Caixa de reclamação pública -->
                 <div class="reclamacao-box">
                     <label for="reclamacaoText"><i class="fas fa-comment-dots"></i> Canal de reclamações</label>
                     <textarea id="reclamacaoText" rows="2" placeholder="Digite sua mensagem..."></textarea>
                     <button id="btnReclamar"><i class="fas fa-paper-plane"></i> Enviar</button>
                     <div class="feedback-msg" id="feedbackReclamacao"></div>
                 </div>
-                <p style="font-size:0.75rem; margin-top:0.5rem; color:#2a3b5a;"><i class="far fa-clock"></i> Respondemos em até 24h</p>
             </div>
         </div>
 
@@ -618,22 +746,50 @@
             </div>
         </div>
 
-        <!-- rodapé com contato direto (reforço) -->
+        <!-- rodapé com contato atualizado -->
         <div class="footer-profissional">
             <div class="footer-contato">
-                <i class="fas fa-envelope"></i> <span>contato@hyza.eng@gmail.com</span>
                 <i class="fas fa-phone-alt"></i> <span>(43) 98871-8805</span>
+                <i class="fas fa-envelope"></i> <span>hyza.eng@gmail.com</span>
             </div>
-            <div>HYZA-SOFT © 2026 · gestão profissional</div>
+            <div>HYZA SOFT © 2026 · gestão profissional</div>
         </div>
     </div>
 
     <script>
         (function() {
-            // ---------- localStorage e dados ----------
+            // ---------- DADOS ----------
             const STORAGE_KEY = 'hyza_profissional';
-            let registros = [];
+            const RECLAMACOES_KEY = 'hyza_reclamacoes';
+            const ADMIN_SENHA = 'admin123'; // senha simples para demonstração
 
+            let registros = [];
+            let reclamacoes = [];
+
+            // Carregar reclamações do localStorage
+            function carregarReclamacoes() {
+                try {
+                    const salvas = localStorage.getItem(RECLAMACOES_KEY);
+                    if (salvas) {
+                        reclamacoes = JSON.parse(salvas);
+                    } else {
+                        // reclamações de exemplo
+                        reclamacoes = [
+                            { id: 'r1', texto: 'Produto veio com defeito, quero trocar.', data: '05/03/2026' },
+                            { id: 'r2', texto: 'Atraso na entrega do lote 5532.', data: '04/03/2026' }
+                        ];
+                    }
+                } catch (e) {
+                    reclamacoes = [];
+                }
+                salvarReclamacoes();
+            }
+
+            function salvarReclamacoes() {
+                localStorage.setItem(RECLAMACOES_KEY, JSON.stringify(reclamacoes));
+            }
+
+            // Carregar registros
             function carregarRegistros() {
                 try {
                     const salvos = localStorage.getItem(STORAGE_KEY);
@@ -649,17 +805,16 @@
                 } catch (e) {
                     registros = [];
                 }
-                // excluir qualquer 'sim' persistido (segurança)
                 registros = registros.filter(item => item.devolucao !== 'sim');
                 ordenarPorData();
-                salvar();
+                salvarRegistros();
             }
 
             function ordenarPorData() {
                 registros.sort((a, b) => (a.data > b.data ? -1 : a.data < b.data ? 1 : 0));
             }
 
-            function salvar() {
+            function salvarRegistros() {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(registros));
             }
 
@@ -690,13 +845,12 @@
                     tbody.innerHTML = html;
                 }
 
-                // eventos remover
                 document.querySelectorAll('.btn-remover').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         const id = e.currentTarget.getAttribute('data-id');
                         registros = registros.filter(r => r.id !== id);
                         ordenarPorData();
-                        salvar();
+                        salvarRegistros();
                         renderizarTabela();
                         atualizarContador();
                     });
@@ -722,7 +876,6 @@
 
                 if (devolucao === 'sim') {
                     alert('✅ Item com devolução não foi salvo (removido automaticamente).');
-                    // limpa só produto/nome/lote (opcional)
                     document.getElementById('campoProduto').value = '';
                     document.getElementById('campoLote').value = '';
                     document.getElementById('campoNome').value = '';
@@ -741,16 +894,15 @@
 
                 registros.push(novo);
                 ordenarPorData();
-                salvar();
+                salvarRegistros();
 
-                // limpar campos
                 document.getElementById('campoProduto').value = '';
                 document.getElementById('campoLote').value = '';
                 document.getElementById('campoNome').value = '';
                 document.getElementById('campoDevolucao').value = 'não';
 
                 renderizarTabela();
-                document.getElementById('searchInput').value = ''; // reset busca
+                document.getElementById('searchInput').value = '';
             }
 
             function pesquisar(termo) {
@@ -768,38 +920,80 @@
                 renderizarTabela(filtrados);
             }
 
-            // --- reclamação fake (só feedback) ---
-            document.getElementById('btnReclamar')?.addEventListener('click', function() {
+            // Função para atualizar a lista de reclamações no painel admin
+            function atualizarListaReclamacoes() {
+                const listaDiv = document.getElementById('reclamacoesLista');
+                if (!listaDiv) return;
+
+                if (reclamacoes.length === 0) {
+                    listaDiv.innerHTML = '<p style="color:#5e6e8c; text-align:center;">Nenhuma reclamação ainda.</p>';
+                    return;
+                }
+
+                let html = '';
+                reclamacoes.slice().reverse().forEach(rec => {
+                    html += `<div class="reclamacao-item">
+                        <strong>📢 Reclamação</strong><br>
+                        ${rec.texto}<br>
+                        <small>${rec.data}</small>
+                    </div>`;
+                });
+                listaDiv.innerHTML = html;
+            }
+
+            // Login admin
+            document.getElementById('btnLoginAdmin').addEventListener('click', function() {
+                const senha = document.getElementById('adminSenha').value;
+                const feedback = document.getElementById('loginFeedback');
+
+                if (senha === ADMIN_SENHA) {
+                    document.getElementById('adminPanel').classList.add('visible');
+                    feedback.innerHTML = '✅ Login bem-sucedido';
+                    atualizarListaReclamacoes();
+                } else {
+                    feedback.innerHTML = '❌ Senha incorreta';
+                }
+            });
+
+            // Sair admin
+            document.getElementById('btnSairAdmin').addEventListener('click', function() {
+                document.getElementById('adminPanel').classList.remove('visible');
+                document.getElementById('adminSenha').value = '';
+                document.getElementById('loginFeedback').innerHTML = '';
+            });
+
+            // Enviar reclamação
+            document.getElementById('btnReclamar').addEventListener('click', function() {
                 const texto = document.getElementById('reclamacaoText').value.trim();
                 const feedback = document.getElementById('feedbackReclamacao');
+
                 if (texto === '') {
                     feedback.innerHTML = '⚠️ Digite sua mensagem.';
-                } else {
-                    feedback.innerHTML = '✅ Reclamação enviada (simulação). Entraremos em contato.';
-                    document.getElementById('reclamacaoText').value = '';
-                    setTimeout(() => { feedback.innerHTML = ''; }, 4000);
+                    return;
                 }
+
+                // Criar nova reclamação
+                const novaReclamacao = {
+                    id: gerarId(),
+                    texto: texto,
+                    data: new Date().toLocaleDateString('pt-BR')
+                };
+
+                reclamacoes.push(novaReclamacao);
+                salvarReclamacoes();
+
+                // Limpar campo
+                document.getElementById('reclamacaoText').value = '';
+                feedback.innerHTML = '✅ Reclamação enviada com sucesso!';
+
+                // Se admin estiver logado, atualizar lista
+                if (document.getElementById('adminPanel').classList.contains('visible')) {
+                    atualizarListaReclamacoes();
+                }
+
+                setTimeout(() => { feedback.innerHTML = ''; }, 3000);
             });
 
-            // inicialização
+            // Inicialização
             carregarRegistros();
-            renderizarTabela();
-
-            // listeners
-            document.getElementById('btnAdicionar').addEventListener('click', adicionarRegistro);
-            document.getElementById('searchBtn').addEventListener('click', () => {
-                const termo = document.getElementById('searchInput').value.trim();
-                pesquisar(termo);
-            });
-            document.getElementById('searchInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    pesquisar(e.target.value.trim());
-                }
-            });
-
-            // contato links reais (você pode trocar depois)
-            // deixei placeholders genéricos, mas pode editar no html.
-        })();
-    </script>
-</body>
-</html>
+            carregarReclam
