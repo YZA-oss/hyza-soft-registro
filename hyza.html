@@ -38,7 +38,7 @@
             text-orientation: upright;
             font-size: 5rem;
             font-weight: 800;
-            color: rgba(25, 44, 70, 0.04);
+            color: rgba(14, 26, 47, 0.04);
             white-space: nowrap;
             transform: rotate(180deg);
             pointer-events: none;
@@ -207,6 +207,7 @@
             border-bottom: 1px solid #e0e6f0;
             transition: 0.2s;
             font-size: 1.05rem;
+            cursor: pointer;
         }
 
         .dropdown-conteudo a i {
@@ -222,30 +223,34 @@
             display: block;
         }
 
-        /* abas de navegação (filtros / planilha / protocolo) */
+        /* abas de navegação expandidas */
         .tab-bar {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             margin: 20px 0 10px 0;
             border-bottom: 2px solid #bdc7db;
             padding-bottom: 2px;
+            flex-wrap: wrap;
         }
 
         .tab-btn {
             background: transparent;
             border: 2px solid transparent;
-            padding: 12px 32px;
-            font-size: 1.1rem;
+            padding: 10px 22px;
+            font-size: 1rem;
             font-weight: 700;
             color: #2c3f66;
             border-radius: 30px 30px 0 0;
             cursor: pointer;
             transition: 0.2s;
             margin-bottom: -2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .tab-btn i {
-            margin-right: 8px;
+            font-size: 1.1rem;
         }
 
         .tab-btn.ativo {
@@ -278,7 +283,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ========== ESTILOS DO FILTRO EXCEL (original adaptado) ========== */
+        /* ========== ESTILOS DO FILTRO EXCEL ========== */
         .filtro-excel {
             background: #ffffff;
             border-radius: 24px 8px 24px 8px;
@@ -443,7 +448,7 @@
             margin-top: 20px;
         }
 
-        /* ========== ESTILOS PROTOCOLO RETIRADA (HYZA.6) ========== */
+        /* ========== ESTILOS PROTOCOLO RETIRADA ========== */
         .protocolo-hyza {
             background: #ffffff;
             border-radius: 24px 8px 24px 8px;
@@ -628,6 +633,101 @@
             padding: 40px;
             color: #5f6f92;
         }
+
+        /* ========== SOBRE NÓS ESTILO ========== */
+        .sobre-card {
+            background: #ffffff;
+            border-radius: 24px 8px 24px 8px;
+            border: 2px solid #0e1a2f;
+            padding: 40px;
+            margin-top: 15px;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5);
+        }
+
+        .sobre-titulo {
+            font-size: 2.5rem;
+            color: #0e1a2f;
+            border-bottom: 3px solid #0e1a2f;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .sobre-texto {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #1f2a44;
+            max-width: 900px;
+            margin: 0 auto;
+            background: #f8fafd;
+            padding: 35px;
+            border-radius: 40px 10px 40px 10px;
+            border: 2px solid #c5d0e5;
+        }
+
+        .sobre-texto p {
+            margin-bottom: 20px;
+        }
+
+        .sobre-destaque {
+            font-weight: 700;
+            color: #0e1a2f;
+            background: #dce5f5;
+            display: inline-block;
+            padding: 5px 20px;
+            border-radius: 40px;
+            margin-top: 15px;
+        }
+
+        /* ========== PORTAL RECLAMAÇÕES EXCLUSIVO ========== */
+        .portal-reclamacoes {
+            background: #ffffff;
+            border-radius: 24px 8px 24px 8px;
+            border: 2px solid #0e1a2f;
+            padding: 30px;
+            margin-top: 15px;
+        }
+
+        .reclamacoes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .nova-reclamacao-card {
+            background: #f8fafd;
+            border: 2px solid #0e1a2f;
+            border-radius: 30px 8px 30px 8px;
+            padding: 30px;
+            box-shadow: 8px 8px 0 #c5d0e5;
+        }
+
+        .lista-reclamacoes-card {
+            background: #f8fafd;
+            border: 2px solid #0e1a2f;
+            border-radius: 30px 8px 30px 8px;
+            padding: 30px;
+            box-shadow: 8px 8px 0 #c5d0e5;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .reclamacao-item-global {
+            background: white;
+            border-left: 8px solid #0e1a2f;
+            border-radius: 20px 5px 20px 5px;
+            padding: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .reclamacao-item-global small {
+            color: #4a5f82;
+            display: block;
+            margin-top: 8px;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -650,21 +750,23 @@
         <div class="dots-menu">
             <div class="dots-trigger"><i class="fas fa-ellipsis-h"></i></div>
             <div class="dropdown-conteudo">
-                <a href="#" id="sobreHyzaLink"><i class="fas fa-info-circle"></i> Sobre HYZA</a>
-                <a href="#" id="portalReclamacoesLink"><i class="fas fa-comment-dots"></i> Portal Reclamações</a>
-                <a href="#" id="contatoLink"><i class="fas fa-headset"></i> Contato</a>
+                <a id="sobreHyzaLink"><i class="fas fa-info-circle"></i> Sobre HYZA</a>
+                <a id="portalReclamacoesLink"><i class="fas fa-comment-dots"></i> Portal Reclamações</a>
+                <a id="contatoLink"><i class="fas fa-headset"></i> Contato</a>
             </div>
         </div>
     </div>
 
-    <!-- abas: filtros / planilha / protocolo retirada -->
+    <!-- abas expandidas -->
     <div class="tab-bar">
         <button class="tab-btn ativo" data-tab="filtros"><i class="fas fa-filter"></i> Filtros</button>
         <button class="tab-btn" data-tab="planilha"><i class="fas fa-file-excel"></i> Planilha</button>
         <button class="tab-btn" data-tab="protocolo"><i class="fas fa-clipboard-list"></i> Protocolo Retirada</button>
+        <button class="tab-btn" data-tab="sobre"><i class="fas fa-building"></i> Sobre Nós</button>
+        <button class="tab-btn" data-tab="reclamacoesGlobal"><i class="fas fa-comment"></i> Portal Reclamações</button>
     </div>
 
-    <!-- Conteúdo da aba Filtros (Excel) - visível inicialmente -->
+    <!-- Aba Filtros (Excel) -->
     <div id="tab-filtros" class="tab-content ativo">
         <div class="filtro-excel">
             <div class="upload-section">
@@ -695,12 +797,12 @@
         </div>
     </div>
 
-    <!-- Conteúdo da aba Planilha (pode ser o mesmo do filtro, apenas uma cópia) -->
+    <!-- Aba Planilha (placeholder) -->
     <div id="tab-planilha" class="tab-content">
         <div class="filtro-excel">
             <h3 style="margin-bottom:15px"><i class="fas fa-table"></i> Visualizador de Planilha</h3>
             <p style="margin-bottom:20px">Utilize a aba "Filtros" para carregar e manipular planilhas. Os dados carregados aparecem abaixo.</p>
-            <div class="table-container" id="planilhaTableContainer" style="display:block; border:2px solid #0e1a2f; min-height:200px">
+            <div class="table-container" style="display:block; border:2px solid #0e1a2f; min-height:200px">
                 <table>
                     <thead><tr><th>Para visualizar, vá em "Filtros" e faça upload</th></tr></thead>
                 </table>
@@ -708,7 +810,7 @@
         </div>
     </div>
 
-    <!-- Conteúdo da aba Protocolo Retirada (cópia fiel do HYZA.6) -->
+    <!-- Aba Protocolo Retirada (original) -->
     <div id="tab-protocolo" class="tab-content">
         <div class="protocolo-hyza">
             <div class="grid-2">
@@ -727,7 +829,7 @@
                     <button class="btn-add" id="btnAdicionar"><i class="fas fa-save"></i> ADICIONAR</button>
                 </div>
 
-                <!-- Contato e admin -->
+                <!-- Contato e admin (dentro do protocolo) -->
                 <div class="contato-card">
                     <h3><i class="fas fa-headset"></i> Atendimento</h3>
                     <div class="contato-item"><i class="fas fa-phone-alt"></i> <a href="tel:+5543988718805">(43) 98871-8805</a></div>
@@ -771,11 +873,46 @@
             <div class="footer"><i class="fas fa-phone-alt"></i> (43) 98871-8805 · hyza.eng@gmail.com · H HYZA ENG © 2026</div>
         </div>
     </div>
+
+    <!-- Nova aba: Sobre Nós -->
+    <div id="tab-sobre" class="tab-content">
+        <div class="sobre-card">
+            <div class="sobre-titulo">Sobre nós</div>
+            <div class="sobre-texto">
+                <p><strong>HYZA ENG. SOFTWARE</strong></p>
+                <p>A HYZA Eng. Software é uma empresa dedicada ao desenvolvimento de soluções tecnológicas e de engenharia voltadas para eficiência, inovação e simplicidade. Criada e administrada por Isabelly D. S., a HYZA nasceu com o objetivo de transformar ideias em sistemas funcionais, práticos e bem estruturados.</p>
+                <p>Unindo conhecimentos de engenharia, tecnologia e desenvolvimento de software, a empresa busca oferecer soluções inteligentes que atendam às necessidades reais de pessoas e empresas. Cada projeto é desenvolvido com atenção aos detalhes, foco na qualidade e compromisso com resultados.</p>
+                <p>Na HYZA, acreditamos que tecnologia não precisa ser complicada. O objetivo é criar ferramentas que realmente resolvam problemas, otimizem processos e tragam inovação de forma clara e eficiente.</p>
+                <div class="sobre-destaque">Isabelly D. S. · Fundadora & Engenheira de Software</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nova aba: Portal de Reclamações (exclusivo) -->
+    <div id="tab-reclamacoesGlobal" class="tab-content">
+        <div class="portal-reclamacoes">
+            <h2 style="color:#0e1a2f; margin-bottom:25px; border-left: 10px solid #0e1a2f; padding-left: 20px;"><i class="fas fa-comment-dots"></i> Portal de Reclamações HYZA</h2>
+            <div class="reclamacoes-grid">
+                <!-- Enviar nova reclamação -->
+                <div class="nova-reclamacao-card">
+                    <h3><i class="fas fa-pen"></i> Envie sua reclamação</h3>
+                    <textarea id="reclamacaoGlobalText" rows="5" style="width:100%; padding:15px; border:2px solid #0e1a2f; border-radius:20px; margin:20px 0; font-size:1rem;" placeholder="Descreva sua reclamação..."></textarea>
+                    <button class="btn-add" id="enviarReclamacaoGlobal"><i class="fas fa-paper-plane"></i> Enviar reclamação</button>
+                    <div id="globalReclamacaoMsg" style="margin-top:15px; color:#0e1a2f; font-weight:500;"></div>
+                </div>
+                <!-- Lista de reclamações (pública) -->
+                <div class="lista-reclamacoes-card">
+                    <h3><i class="fas fa-list"></i> Reclamações recentes</h3>
+                    <div id="listaReclamacoesGlobal" style="margin-top:15px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
     (function() {
-        // ------------------- DADOS GLOBAIS (protocolo) -------------------
+        // ------------------- DADOS GLOBAIS (protocolo e reclamações) -------------------
         let registros = [];
         let reclamacoes = [];
         const ADMIN_SENHA = '283090';
@@ -827,7 +964,8 @@
             renderizarTabelaProtocolo();
         };
 
-        function adicionarRegistro() {
+        // Adicionar registro
+        document.getElementById('btnAdicionar')?.addEventListener('click', function() {
             const data = document.getElementById('data').value;
             const produto = document.getElementById('produto').value.trim();
             const lote = document.getElementById('lote').value.trim();
@@ -843,8 +981,9 @@
             registros.push(novo); ordenarRegistros(); salvarRegistros(); renderizarTabelaProtocolo();
             document.getElementById('produto').value = ''; document.getElementById('lote').value = ''; document.getElementById('nome').value = ''; document.getElementById('devolucao').value = 'nao';
             alert('Registro adicionado!');
-        }
+        });
 
+        // Funções de reclamações (admin e global)
         function atualizarReclamacoesAdmin() {
             const lista = document.getElementById('listaReclamacoes');
             if (!lista) return;
@@ -853,6 +992,73 @@
             reclamacoes.slice().reverse().forEach(r => { html += `<div class="reclamacao-item"><strong>📢 Reclamação</strong><br>${r.texto}<br><small>${r.data}</small></div>`; });
             lista.innerHTML = html;
         }
+
+        function atualizarReclamacoesGlobal() {
+            const lista = document.getElementById('listaReclamacoesGlobal');
+            if (!lista) return;
+            if (!reclamacoes.length) { lista.innerHTML = '<p style="color:#5f6f92; text-align:center;">Nenhuma reclamação publicada ainda.</p>'; return; }
+            let html = '';
+            reclamacoes.slice().reverse().forEach(r => {
+                html += `<div class="reclamacao-item-global"><strong><i class="fas fa-comment"></i> Reclamação</strong> <br>${r.texto}<br><small>${r.data}</small></div>`;
+            });
+            lista.innerHTML = html;
+        }
+
+        // Login admin
+        document.addEventListener('click', function(e) {
+            if (e.target.id === 'btnLogin') {
+                const senha = document.getElementById('senhaAdmin').value;
+                const msg = document.getElementById('loginMsg');
+                if (senha === ADMIN_SENHA) {
+                    document.getElementById('painelAdmin').style.display = 'block';
+                    msg.innerHTML = '✅ Login OK';
+                    atualizarReclamacoesAdmin();
+                } else msg.innerHTML = '❌ Senha incorreta';
+            }
+            if (e.target.id === 'btnSair') {
+                document.getElementById('painelAdmin').style.display = 'none';
+                document.getElementById('senhaAdmin').value = '';
+                document.getElementById('loginMsg').innerHTML = '';
+            }
+            if (e.target.id === 'btnReclamar') {
+                const texto = document.getElementById('textoReclamacao').value.trim();
+                const msg = document.getElementById('reclamacaoMsg');
+                if (!texto) { msg.innerHTML = 'Digite a reclamação'; return; }
+                const nova = { id: Date.now()+'-'+Math.random(), texto, data: new Date().toLocaleDateString('pt-BR') };
+                reclamacoes.push(nova); salvarReclamacoes();
+                document.getElementById('textoReclamacao').value = '';
+                msg.innerHTML = '✅ Enviada';
+                if (document.getElementById('painelAdmin').style.display === 'block') atualizarReclamacoesAdmin();
+                atualizarReclamacoesGlobal();
+                setTimeout(()=> msg.innerHTML='',2500);
+            }
+            if (e.target.id === 'enviarReclamacaoGlobal') {
+                const texto = document.getElementById('reclamacaoGlobalText').value.trim();
+                const msg = document.getElementById('globalReclamacaoMsg');
+                if (!texto) { msg.innerHTML = 'Escreva sua reclamação'; return; }
+                const nova = { id: Date.now()+'-'+Math.random(), texto, data: new Date().toLocaleDateString('pt-BR') };
+                reclamacoes.push(nova); salvarReclamacoes();
+                document.getElementById('reclamacaoGlobalText').value = '';
+                msg.innerHTML = '✅ Reclamação enviada com sucesso!';
+                atualizarReclamacoesGlobal();
+                if (document.getElementById('painelAdmin').style.display === 'block') atualizarReclamacoesAdmin();
+                setTimeout(()=> msg.innerHTML='',3000);
+            }
+        });
+
+        // Busca do protocolo (simplificada)
+        document.getElementById('btnBuscar')?.addEventListener('click', function(){
+            const termo = document.getElementById('campoBusca')?.value.toLowerCase() || '';
+            if (!termo) { renderizarTabelaProtocolo(); return; }
+            const filtrados = registros.filter(r => r.data.includes(termo) || r.produto.toLowerCase().includes(termo) || (r.lote && r.lote.toLowerCase().includes(termo)) || (r.nome && r.nome.toLowerCase().includes(termo)));
+            const tbody = document.getElementById('corpoTabela');
+            if (!filtrados.length) tbody.innerHTML = '<tr><td colspan="6" class="vazio">Nenhum</td></tr>';
+            else {
+                let html = '';
+                filtrados.forEach(item => { html += `<tr><td>${item.data}</td><td>${item.produto}</td><td>${item.lote||'-'}</td><td>${item.nome||'-'}</td><td><span class="badge">Não</span></td><td><button class="btn-remover" onclick="removerRegistro('${item.id}')"><i class="fas fa-trash"></i> Remover</button></td></tr>`; });
+                tbody.innerHTML = html;
+            }
+        });
 
         // ---------- EXCEL (filtro) ----------
         let excelData = [], filteredData = [], columns = [];
@@ -954,53 +1160,11 @@
             } catch { showStatus('Erro export','error'); }
         });
 
-        // ---------- LOGIN ADMIN / RECLAMAÇÕES ----------
-        document.addEventListener('click', function(e) {
-            if (e.target.id === 'btnLogin') {
-                const senha = document.getElementById('senhaAdmin').value;
-                const msg = document.getElementById('loginMsg');
-                if (senha === ADMIN_SENHA) {
-                    document.getElementById('painelAdmin').style.display = 'block';
-                    msg.innerHTML = '✅ Login OK';
-                    atualizarReclamacoesAdmin();
-                } else msg.innerHTML = '❌ Senha incorreta';
-            }
-            if (e.target.id === 'btnSair') {
-                document.getElementById('painelAdmin').style.display = 'none';
-                document.getElementById('senhaAdmin').value = '';
-                document.getElementById('loginMsg').innerHTML = '';
-            }
-            if (e.target.id === 'btnReclamar') {
-                const texto = document.getElementById('textoReclamacao').value.trim();
-                const msg = document.getElementById('reclamacaoMsg');
-                if (!texto) { msg.innerHTML = 'Digite a reclamação'; return; }
-                const nova = { id: Date.now()+'-'+Math.random(), texto, data: new Date().toLocaleDateString('pt-BR') };
-                reclamacoes.push(nova); salvarReclamacoes();
-                document.getElementById('textoReclamacao').value = '';
-                msg.innerHTML = '✅ Enviada';
-                if (document.getElementById('painelAdmin').style.display === 'block') atualizarReclamacoesAdmin();
-                setTimeout(()=> msg.innerHTML='',2500);
-            }
-        });
-
-        document.getElementById('btnAdicionar').addEventListener('click', adicionarRegistro);
-        document.getElementById('btnBuscar')?.addEventListener('click', function(){
-            const termo = document.getElementById('campoBusca')?.value.toLowerCase() || '';
-            if (!termo) { renderizarTabelaProtocolo(); return; }
-            const filtrados = registros.filter(r => r.data.includes(termo) || r.produto.toLowerCase().includes(termo) || (r.lote && r.lote.toLowerCase().includes(termo)) || (r.nome && r.nome.toLowerCase().includes(termo)));
-            const tbody = document.getElementById('corpoTabela');
-            if (!filtrados.length) tbody.innerHTML = '<tr><td colspan="6" class="vazio">Nenhum</td></tr>';
-            else {
-                let html = '';
-                filtrados.forEach(item => { html += `<tr><td>${item.data}</td><td>${item.produto}</td><td>${item.lote||'-'}</td><td>${item.nome||'-'}</td><td><span class="badge">Não</span></td><td><button class="btn-remover" onclick="removerRegistro('${item.id}')"><i class="fas fa-trash"></i> Remover</button></td></tr>`; });
-                tbody.innerHTML = html;
-            }
-        });
-
         // ---------- INICIALIZAÇÃO ----------
         carregarDadosProtocolo();
         ordenarRegistros();
         renderizarTabelaProtocolo();
+        atualizarReclamacoesGlobal();
 
         // Abas
         const tabs = document.querySelectorAll('.tab-btn');
@@ -1012,13 +1176,17 @@
                 contents.forEach(c => c.classList.remove('ativo'));
                 const target = 'tab-' + t.dataset.tab;
                 document.getElementById(target)?.classList.add('ativo');
+                if (target === 'tab-reclamacoesGlobal') atualizarReclamacoesGlobal();
             });
         });
 
-        // Links do menu (simulação)
-        document.getElementById('sobreHyzaLink').addEventListener('click', (e) => { e.preventDefault(); alert('HYZA ENG. SOFTWARE - Soluções em gestão e qualidade.'); });
-        document.getElementById('portalReclamacoesLink').addEventListener('click', (e) => { e.preventDefault(); document.querySelector('[data-tab="protocolo"]').click(); document.getElementById('textoReclamacao')?.scrollIntoView(); });
-        document.getElementById('contatoLink').addEventListener('click', (e) => { e.preventDefault(); alert('Contato: (43) 98871-8805 | hyza.eng@gmail.com'); });
+        // Links do menu
+        document.getElementById('sobreHyzaLink').addEventListener('click', (e) => { e.preventDefault(); 
+            document.querySelector('[data-tab="sobre"]').click(); });
+        document.getElementById('portalReclamacoesLink').addEventListener('click', (e) => { e.preventDefault(); 
+            document.querySelector('[data-tab="reclamacoesGlobal"]').click(); });
+        document.getElementById('contatoLink').addEventListener('click', (e) => { e.preventDefault(); 
+            alert('Contato: (43) 98871-8805 | hyza.eng@gmail.com'); });
 
         // Pesquisa global (simples alert)
         document.getElementById('searchGlobalBtn').addEventListener('click', ()=>{
@@ -1028,11 +1196,13 @@
     })();
 </script>
 
-<!-- pequeno ajuste painel admin -->
+<!-- ajuste painel admin -->
 <style>
+    .admin-panel { display: none; }
     .admin-panel.visible { display: block; }
     #painelAdmin { display: none; }
     #painelAdmin.visible { display: block; }
+    .reclamacoes-list { max-height: 150px; overflow-y: auto; }
 </style>
 </body>
 </html>
