@@ -833,7 +833,7 @@
             salvarReclamacoes();
             document.getElementById('reclamacaoTexto').value = '';
             document.getElementById('reclamacaoNome').value = '';
-            document.getElementById('feedbackReclamacao').innerHTML = '✅ Reclamação enviada (visível apenas ao admin)';
+            document.getElementById('feedbackReclamacao').innerHTML = 'Reclamação enviada! (visível apenas ao admin)';
             setTimeout(() => document.getElementById('feedbackReclamacao').innerHTML = '', 3000);
             if (painelAdmin.style.display === 'block') atualizarListaReclamacoesAdmin();
         });
