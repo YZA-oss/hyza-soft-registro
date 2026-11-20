@@ -1,0 +1,2235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0A1428">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23A9B8D4'/%3E%3Ctext x='16' y='23' font-size='20' font-weight='800' text-anchor='middle' fill='%230A1428' font-family='Arial'%3EH%3C/text%3E%3C/svg%3E">
+<meta name="description" content="HYZA Eng. Software — Plataforma de engenharia, automação e ferramentas operacionais.">
+<title>HYZA Eng. Software · Plataforma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --navy-900:#0A1428; --navy-800:#0F1E33; --navy-700:#142541;
+  --navy-600:#1D3557; --navy-500:#2A4A73; --navy-400:#3A5A8A;
+  --silver-300:#C0CBE0; --silver-400:#8F9FC0; --silver-500:#6F7FA0;
+  --text:#EEF2F7; --text-dim:#B0C0DA; --text-mute:#7A8BA8;
+  --success:#4ADE80; --warning:#FBBF24; --danger:#F87171; --info:#60A5FA;
+  --radius-sm:8px; --radius-md:14px; --radius-lg:22px; --radius-xl:30px;
+  --shadow-sm:0 4px 12px rgba(0,0,0,.25);
+  --shadow-md:0 12px 30px rgba(0,0,0,.45);
+  --shadow-lg:0 30px 60px -20px rgba(0,0,0,.75);
+  --grad-metal:linear-gradient(145deg,#D4DDEC 0%,#A9B8D4 45%,#8F9FC0 100%);
+  --grad-metal-soft:linear-gradient(145deg,rgba(192,203,230,.18),rgba(143,159,192,.06));
+  --grad-panel:linear-gradient(160deg,rgba(20,37,65,.85),rgba(10,20,40,.92));
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --dur:.28s;
+  color-scheme:dark;
+}
+@media (prefers-reduced-motion: reduce){
+  :root{--dur:.01s}
+  *{animation-duration:.01s!important;transition-duration:.01s!important}
+}
+
+/* ============ RESET ============ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--navy-900); color:var(--text);
+  line-height:1.6; min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:
+    linear-gradient(rgba(192,203,230,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(192,203,230,.025) 1px,transparent 1px);
+  background-size:64px 64px;
+  -webkit-mask-image:radial-gradient(ellipse at 50% 0%,#000 40%,transparent 85%);
+  mask-image:radial-gradient(ellipse at 50% 0%,#000 40%,transparent 85%);
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{font-family:inherit;font-size:inherit}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--silver-300);outline-offset:3px;border-radius:4px}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* ============ LAYOUT SHELL ============ */
+.shell{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh}
+.container{width:100%;max-width:1480px;margin:0 auto;padding:0 28px}
+@media(max-width:640px){.container{padding:0 16px}}
+
+/* ============ NAVBAR ============ */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,20,40,.72);
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  border-bottom:1px solid rgba(192,203,230,.14);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:16px 0}
+.brand{display:flex;align-items:center;gap:14px;cursor:pointer}
+.brand-mark{
+  width:48px;height:48px;border-radius:14px 4px 14px 4px;
+  background:var(--grad-metal);
+  display:grid;place-items:center;
+  box-shadow:var(--shadow-sm),inset 0 2px 3px rgba(255,255,255,.55),inset 0 -2px 3px rgba(0,0,0,.2);
+  border:1px solid rgba(255,255,255,.35);
+  transition:transform var(--dur) var(--ease);
+}
+.brand:hover .brand-mark{transform:rotate(-3deg) scale(1.04)}
+.brand-mark span{font-size:1.7rem;font-weight:800;color:var(--navy-900);line-height:1;margin-top:-3px;text-shadow:0 1px 2px rgba(255,255,255,.5)}
+.brand-text{display:flex;flex-direction:column;line-height:1.05}
+.brand-text b{font-size:1.15rem;font-weight:700;letter-spacing:.06em;background:linear-gradient(135deg,#fff,#C0CBE0);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.brand-text small{font-size:.62rem;letter-spacing:.22em;color:var(--silver-500);text-transform:uppercase;font-weight:600}
+
+.nav-links{display:flex;align-items:center;gap:6px}
+.nav-link{
+  cursor:pointer;padding:9px 16px;border-radius:10px;font-size:.92rem;font-weight:500;
+  color:var(--text-dim);transition:all var(--dur) var(--ease);position:relative;
+}
+.nav-link:hover{color:#fff;background:rgba(192,203,230,.08)}
+.nav-link.active{color:#fff;background:rgba(192,203,230,.1)}
+.nav-link.active::after{
+  content:"";position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);
+  width:22px;height:3px;border-radius:3px;background:var(--silver-300);
+  box-shadow:0 0 10px var(--silver-300);
+}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:9px 18px;border-radius:40px;font-size:.88rem;font-weight:600;
+  border:1.5px solid rgba(192,203,230,.4);color:var(--silver-300);
+  transition:all var(--dur) var(--ease);
+}
+.btn-ghost:hover{background:var(--silver-300);color:var(--navy-900);border-color:var(--silver-300)}
+.btn-ghost.on{background:var(--silver-300);color:var(--navy-900)}
+.menu-toggle{display:none;padding:10px;border-radius:10px;font-size:1.2rem;color:var(--text)}
+@media(max-width:960px){
+  .nav-links{
+    position:absolute;top:100%;left:0;right:0;
+    flex-direction:column;align-items:stretch;gap:2px;
+    background:rgba(10,20,40,.98);backdrop-filter:blur(20px);
+    padding:0 12px;border-bottom:1px solid transparent;
+    max-height:0;overflow:hidden;opacity:0;visibility:hidden;pointer-events:none;
+    transition:all var(--dur) var(--ease);
+  }
+  .nav-links.open{max-height:400px;opacity:1;visibility:visible;pointer-events:auto;padding:12px;border-bottom-color:rgba(192,203,230,.14)}
+  .nav-link{padding:12px 16px}
+  .nav-link.active::after{display:none}
+  .menu-toggle{display:inline-flex}
+}
+
+/* ============ BOTÕES ============ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:13px 26px;border-radius:40px;font-weight:600;font-size:.94rem;
+  transition:all var(--dur) var(--ease);white-space:nowrap;
+}
+.btn-primary{
+  background:var(--grad-metal);color:var(--navy-900);
+  box-shadow:0 6px 0 #4a5f82,0 10px 24px rgba(0,0,0,.35);
+  border:1px solid rgba(255,255,255,.35);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 9px 0 #4a5f82,0 14px 28px rgba(0,0,0,.4)}
+.btn-primary:active{transform:translateY(2px);box-shadow:0 3px 0 #4a5f82}
+.btn-secondary{
+  background:transparent;color:var(--silver-300);border:1.5px solid rgba(192,203,230,.45);
+}
+.btn-secondary:hover{background:rgba(192,203,230,.1);border-color:var(--silver-300);color:#fff}
+.btn-danger{background:rgba(248,113,113,.12);color:var(--danger);border:1.5px solid rgba(248,113,113,.4)}
+.btn-danger:hover{background:var(--danger);color:var(--navy-900)}
+.btn-sm{padding:8px 16px;font-size:.84rem}
+.btn-primary.btn-sm{box-shadow:0 3px 0 #4a5f82,0 6px 14px rgba(0,0,0,.3)}
+.btn-primary.btn-sm:hover{box-shadow:0 5px 0 #4a5f82,0 8px 16px rgba(0,0,0,.35)}
+.btn-primary.btn-sm:active{transform:translateY(1px);box-shadow:0 2px 0 #4a5f82}
+.btn-icon{padding:9px;width:38px;height:38px;border-radius:10px}
+.btn[disabled]{opacity:.5;cursor:not-allowed;transform:none!important}
+
+/* ============ TIPOGRAFIA ============ */
+.h1{font-size:clamp(2.2rem,5vw,4.2rem);font-weight:800;line-height:1.05;letter-spacing:-.02em}
+.h2{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;line-height:1.15;letter-spacing:-.01em}
+.h3{font-size:1.25rem;font-weight:600}
+.eyebrow{
+  font-size:.72rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--silver-500);display:inline-flex;align-items:center;gap:8px;
+}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--silver-500)}
+.text-grad{background:linear-gradient(135deg,#fff 10%,#C0CBE0 90%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.text-dim{color:var(--text-dim)}
+.text-mute{color:var(--text-mute)}
+
+/* ============ VIEWS ============ */
+.view{display:none;animation:fadeUp .45s var(--ease)}
+.view.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ============ HOME — HERO ============ */
+.hero{padding:64px 0 40px;display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+@media(max-width:960px){.hero{grid-template-columns:1fr;gap:36px;padding:40px 0 24px}}
+@media(max-width:520px){.hero-mark-row{flex-direction:column;align-items:flex-start;gap:16px}.hero-mark{width:72px;height:72px}.hero-mark span{font-size:2.6rem}}
+.hero-mark-row{display:flex;align-items:center;gap:22px;margin-bottom:22px}
+.hero-mark{
+  width:92px;height:92px;border-radius:26px 6px 26px 6px;
+  background:var(--grad-metal);display:grid;place-items:center;
+  box-shadow:var(--shadow-md),inset 0 3px 6px rgba(255,255,255,.6),inset 0 -3px 6px rgba(0,0,0,.25);
+  border:1px solid rgba(255,255,255,.4);
+  flex-shrink:0;
+}
+.hero-mark span{font-size:3.4rem;font-weight:800;color:var(--navy-900);line-height:1;margin-top:-6px;text-shadow:0 2px 4px rgba(255,255,255,.5)}
+.hero h1{margin-bottom:14px}
+.hero-lead{
+  font-size:1.18rem;color:var(--text-dim);max-width:560px;
+  border-left:3px solid var(--silver-300);padding-left:22px;margin-bottom:8px;
+}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 30px}
+.chip{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:7px 14px;border-radius:30px;font-size:.82rem;font-weight:500;
+  background:rgba(192,203,230,.07);border:1px solid rgba(192,203,230,.18);
+  color:var(--text-dim);
+}
+.chip i{color:var(--silver-300);font-size:.85rem}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px}
+
+/* Painel técnico decorativo (direita) */
+.hero-panel{
+  position:relative;
+  background:var(--grad-panel);
+  border:1px solid rgba(192,203,230,.2);
+  border-radius:28px 8px 28px 8px;
+  padding:28px;
+  box-shadow:var(--shadow-lg);
+  overflow:hidden;
+}
+.hero-panel::before{
+  content:"";position:absolute;top:-40%;right:-30%;
+  width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(192,203,230,.14),transparent 70%);
+  pointer-events:none;
+}
+.hero-panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid rgba(192,203,230,.15)}
+.hero-panel-head b{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--silver-500)}
+.dot-row{display:flex;gap:6px}
+.dot{width:9px;height:9px;border-radius:50%;background:rgba(192,203,230,.3)}
+.dot.g{background:var(--success)}
+.hero-kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.kpi-mini{background:rgba(0,0,0,.25);border:1px solid rgba(192,203,230,.12);border-radius:14px;padding:14px}
+.kpi-mini b{display:block;font-size:1.6rem;font-weight:700;color:#fff;line-height:1.1}
+.kpi-mini small{font-size:.72rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.hero-panel-list{display:flex;flex-direction:column;gap:10px}
+.hero-panel-item{display:flex;align-items:center;gap:12px;font-size:.88rem;color:var(--text-dim)}
+.hero-panel-item i{color:var(--silver-300);width:20px;text-align:center}
+.hero-panel-item>span:not(.bar){min-width:150px}
+.hero-panel-item .bar{flex:1;height:5px;border-radius:3px;background:rgba(192,203,230,.12);overflow:hidden}
+.hero-panel-item .bar>i{display:block;height:100%;background:var(--grad-metal);border-radius:3px;width:var(--w,40%)}
+
+/* ============ SEÇÕES ============ */
+.section{padding:56px 0}
+.section-head{max-width:760px;margin-bottom:36px}
+.section-head .eyebrow{margin-bottom:14px}
+.section-head p{color:var(--text-dim);font-size:1.02rem;margin-top:12px}
+
+/* Sobre */
+#secao-sobre{scroll-margin-top:100px}
+.about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:32px}
+@media(max-width:860px){.about-grid{grid-template-columns:1fr}}
+.about-card{
+  background:var(--grad-panel);
+  border:1px solid rgba(192,203,230,.16);
+  border-radius:var(--radius-lg);
+  padding:32px;box-shadow:var(--shadow-md);
+}
+.about-card p{color:var(--text-dim);margin-bottom:16px}
+.about-card p:last-child{margin-bottom:0}
+.about-card strong{color:#fff}
+.values-list{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.value-item{display:flex;gap:14px;align-items:flex-start}
+.value-item .vi-ico{
+  width:38px;height:38px;border-radius:10px;flex-shrink:0;
+  background:rgba(192,203,230,.1);border:1px solid rgba(192,203,230,.2);
+  display:grid;place-items:center;color:var(--silver-300);font-size:.95rem;
+}
+.value-item b{display:block;color:#fff;font-size:.95rem;margin-bottom:2px}
+.value-item span{font-size:.86rem;color:var(--text-mute)}
+
+/* Áreas de atuação */
+.areas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.area-card{
+  background:var(--grad-panel);
+  border:1px solid rgba(192,203,230,.16);
+  border-radius:20px 6px 20px 6px;
+  padding:26px;transition:all var(--dur) var(--ease);
+  position:relative;overflow:hidden;
+}
+.area-card:hover{border-color:rgba(192,203,230,.4);transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.area-card .ai{
+  width:48px;height:48px;border-radius:14px;margin-bottom:16px;
+  background:var(--grad-metal-soft);border:1px solid rgba(192,203,230,.25);
+  display:grid;place-items:center;color:var(--silver-300);font-size:1.2rem;
+}
+.area-card h3{font-size:1.08rem;margin-bottom:8px;color:#fff}
+.area-card p{font-size:.88rem;color:var(--text-mute);line-height:1.55}
+
+/* Reclamações públicas */
+.reclamacoes-wrap{
+  background:var(--grad-panel);
+  border:1px solid rgba(192,203,230,.18);
+  border-radius:32px 10px 32px 10px;
+  padding:44px;
+  box-shadow:var(--shadow-lg);
+}
+@media(max-width:640px){.reclamacoes-wrap{padding:26px}}
+.reclamacoes-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:40px;margin-top:28px}
+@media(max-width:860px){.reclamacoes-grid{grid-template-columns:1fr;gap:24px}}
+.form{display:flex;flex-direction:column;gap:16px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field label{font-size:.82rem;font-weight:600;color:var(--text-dim);letter-spacing:.02em}
+.field label .req{color:var(--danger)}
+.input,.textarea,.select{
+  width:100%;padding:14px 18px;border-radius:14px;
+  background:rgba(0,0,0,.28);border:1.5px solid var(--navy-500);
+  color:#fff;transition:all var(--dur) var(--ease);font-size:.94rem;
+}
+.input::placeholder,.textarea::placeholder{color:var(--text-mute)}
+.input:focus,.textarea:focus,.select:focus{
+  outline:none;border-color:var(--silver-300);
+  box-shadow:0 0 0 3px rgba(192,203,230,.14);
+}
+.textarea{resize:vertical;min-height:110px}
+.select{cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23C0CBE0' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 16px center;padding-right:40px;
+}
+.select option{background:var(--navy-700);color:#fff}
+
+/* ============ APP (CENTRAL DE FERRAMENTAS) ============ */
+.app-shell{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 81px)}
+@media(max-width:960px){.app-shell{grid-template-columns:1fr}}
+.sidebar{
+  background:rgba(8,17,33,.7);backdrop-filter:blur(12px);
+  border-right:1px solid rgba(192,203,230,.1);
+  padding:24px 16px;position:sticky;top:81px;height:calc(100vh - 81px);
+  overflow-y:auto;
+}
+@media(max-width:960px){
+  .sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid rgba(192,203,230,.1);
+    display:flex;gap:6px;padding:10px 12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}
+  .sidebar-group{display:flex;gap:6px;margin:0}
+  .sidebar-label{display:none}
+  .sidebar-item{width:auto;white-space:nowrap;flex-shrink:0;padding:10px 14px}
+}
+.sidebar-group{margin-bottom:22px}
+.sidebar-label{font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--text-mute);padding:0 12px;margin-bottom:8px}
+.sidebar-item{
+  display:flex;align-items:center;gap:11px;width:100%;
+  padding:11px 12px;border-radius:10px;font-size:.9rem;font-weight:500;
+  color:var(--text-dim);transition:all var(--dur) var(--ease);text-align:left;
+}
+.sidebar-item i{width:18px;text-align:center;font-size:.92rem;color:var(--silver-500)}
+.sidebar-item:hover{background:rgba(192,203,230,.07);color:#fff}
+.sidebar-item.active{background:rgba(192,203,230,.12);color:#fff;font-weight:600}
+.sidebar-item.active i{color:var(--silver-300)}
+.sidebar-item .badge{margin-left:auto;font-size:.68rem;padding:2px 8px;border-radius:20px;background:rgba(192,203,230,.15);color:var(--silver-300);font-weight:700}
+.sidebar-item.active .badge{background:var(--silver-300);color:var(--navy-900)}
+
+.workspace{padding:28px 32px 48px;overflow-x:hidden;min-width:0}
+@media(max-width:640px){.workspace{padding:20px 16px 40px}}
+.ws-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:26px;flex-wrap:wrap}
+.breadcrumbs{display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--text-mute);margin-bottom:10px}
+.breadcrumbs i{font-size:.62rem}
+.ws-title{font-size:1.7rem;font-weight:700;color:#fff;line-height:1.15}
+.ws-sub{font-size:.9rem;color:var(--text-dim);margin-top:6px;max-width:640px}
+
+.tool-panel{display:none;animation:fadeUp .35s var(--ease)}
+.tool-panel.active{display:block}
+
+/* Cards genéricos */
+.card{
+  background:var(--grad-panel);border:1px solid rgba(192,203,230,.14);
+  border-radius:18px;padding:24px;box-shadow:var(--shadow-sm);
+}
+.card + .card{margin-top:20px}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.card-head h3{font-size:1.1rem;color:#fff;display:flex;align-items:center;gap:10px}
+.card-head h3 i{color:var(--silver-300)}
+
+/* KPIs dashboard */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px}
+.kpi{
+  background:var(--grad-panel);border:1px solid rgba(192,203,230,.14);
+  border-radius:16px;padding:20px;position:relative;overflow:hidden;
+}
+.kpi::after{content:"";position:absolute;top:0;right:0;width:60px;height:60px;border-radius:50%;
+  background:radial-gradient(circle,rgba(192,203,230,.1),transparent 70%);transform:translate(20%,-20%)}
+.kpi-label{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-mute);margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.kpi-label i{color:var(--silver-400)}
+.kpi-value{font-size:2rem;font-weight:800;color:#fff;line-height:1}
+.kpi-sub{font-size:.78rem;color:var(--text-mute);margin-top:6px}
+
+/* Tabelas */
+.table-wrap{
+  border:1px solid rgba(192,203,230,.14);border-radius:14px;
+  overflow:auto;background:rgba(0,0,0,.2);max-height:600px;
+}
+table.data{width:100%;border-collapse:collapse;font-size:.88rem}
+table.data th{
+  position:sticky;top:0;z-index:2;
+  background:var(--navy-600);color:#fff;text-align:left;
+  padding:13px 16px;font-weight:600;font-size:.78rem;
+  letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;
+  border-bottom:1px solid rgba(192,203,230,.2);user-select:none;
+}
+table.data th[data-sort]{cursor:pointer}
+table.data th[data-sort]:hover{background:var(--navy-500)}
+table.data th .sort-i{margin-left:6px;opacity:.4;font-size:.7rem}
+table.data th.sorted .sort-i{opacity:1;color:var(--silver-300)}
+table.data td{padding:12px 16px;border-bottom:1px solid rgba(192,203,230,.07);color:var(--text-dim);vertical-align:middle}
+table.data tbody tr{transition:background var(--dur) var(--ease)}
+table.data tbody tr:nth-child(even){background:rgba(192,203,230,.02)}
+table.data tbody tr:hover{background:rgba(192,203,230,.07)}
+table.data tbody tr:last-child td{border-bottom:none}
+body.compact table.data td{padding:6px 12px}
+body.compact table.data th{padding:9px 12px}
+.td-nowrap{white-space:nowrap}
+.td-right{text-align:right}
+
+/* Badges / tags */
+.tag{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:20px;font-size:.74rem;font-weight:600;letter-spacing:.02em}
+.tag-ok{background:rgba(74,222,128,.14);color:var(--success);border:1px solid rgba(74,222,128,.3)}
+.tag-warn{background:rgba(251,191,36,.14);color:var(--warning);border:1px solid rgba(251,191,36,.3)}
+.tag-info{background:rgba(96,165,250,.14);color:var(--info);border:1px solid rgba(96,165,250,.3)}
+.tag-mute{background:rgba(192,203,230,.1);color:var(--silver-400);border:1px solid rgba(192,203,230,.2)}
+
+/* Upload zone */
+.upload{
+  border:2px dashed rgba(143,159,192,.45);border-radius:20px;
+  padding:40px 24px;text-align:center;transition:all var(--dur) var(--ease);
+  background:rgba(0,0,0,.18);cursor:pointer;
+}
+.upload:hover,.upload.drag{border-color:var(--silver-300);background:rgba(192,203,230,.06)}
+.upload i.big{font-size:2.4rem;color:var(--silver-400);margin-bottom:14px;display:block}
+.upload b{display:block;color:#fff;font-size:1rem;margin-bottom:4px}
+.upload small{color:var(--text-mute);font-size:.82rem}
+.upload .file-meta{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:16px}
+
+/* Filtros */
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0}
+.filter-field{display:flex;flex-direction:column;gap:5px}
+.filter-field label{font-size:.76rem;color:var(--silver-400);font-weight:600}
+.filter-field .input,.filter-field .select{padding:9px 14px;font-size:.86rem;border-radius:10px}
+
+/* Paginação */
+.pagination{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:16px}
+.page-info{font-size:.82rem;color:var(--text-mute)}
+.page-btns{display:flex;gap:6px;flex-wrap:wrap}
+.page-btn{padding:7px 13px;border-radius:8px;font-size:.82rem;font-weight:600;
+  background:rgba(192,203,230,.07);border:1px solid rgba(192,203,230,.15);color:var(--text-dim);
+  transition:all var(--dur) var(--ease)}
+.page-btn:hover:not(:disabled){background:rgba(192,203,230,.15);color:#fff}
+.page-btn.active{background:var(--silver-300);color:var(--navy-900);border-color:var(--silver-300)}
+.page-btn:disabled{opacity:.35;cursor:not-allowed}
+
+/* Empty state */
+.empty{
+  text-align:center;padding:54px 24px;color:var(--text-mute);
+}
+.empty .e-ico{
+  width:70px;height:70px;border-radius:20px;margin:0 auto 18px;
+  background:rgba(192,203,230,.07);border:1px solid rgba(192,203,230,.14);
+  display:grid;place-items:center;font-size:1.6rem;color:var(--silver-500);
+}
+.empty b{display:block;color:var(--text-dim);font-size:1rem;margin-bottom:6px}
+.empty small{font-size:.84rem}
+
+/* Toast */
+.toast-host{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:10px;max-width:360px}
+@media(max-width:480px){.toast-host{left:16px;right:16px;bottom:16px;max-width:none}}
+.toast{
+  display:flex;align-items:flex-start;gap:12px;padding:14px 18px;
+  background:var(--navy-700);border:1px solid rgba(192,203,230,.25);
+  border-radius:14px;box-shadow:var(--shadow-md);
+  animation:toastIn .35s var(--ease);font-size:.88rem;
+}
+.toast.out{animation:toastOut .3s var(--ease) forwards}
+@keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateX(30px)}}
+.toast i{font-size:1.1rem;margin-top:1px}
+.toast.ok i{color:var(--success)} .toast.err i{color:var(--danger)} .toast.info i{color:var(--info)}
+.toast b{display:block;color:#fff;font-size:.88rem;margin-bottom:2px}
+.toast span{color:var(--text-mute);font-size:.8rem}
+
+/* Modal */
+.modal-host{
+  position:fixed;inset:0;z-index:1000;display:none;
+  align-items:center;justify-content:center;padding:20px;
+  background:rgba(3,8,18,.8);backdrop-filter:blur(10px);
+}
+.modal-host.open{display:flex}
+.modal{
+  background:linear-gradient(160deg,var(--navy-700),var(--navy-800));
+  border:1px solid rgba(192,203,230,.22);border-radius:24px;
+  padding:32px;max-width:480px;width:100%;box-shadow:var(--shadow-lg);
+  animation:fadeUp .3s var(--ease);
+  max-height:calc(100vh - 40px);overflow-y:auto;
+}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
+.modal-head h3{font-size:1.25rem;color:#fff}
+.modal-close{padding:6px;border-radius:8px;color:var(--text-mute);transition:all var(--dur) var(--ease)}
+.modal-close:hover{background:rgba(192,203,230,.1);color:#fff}
+
+/* Login */
+.login-hero{text-align:center;margin-bottom:26px}
+.login-hero .brand-mark{margin:0 auto 16px;width:64px;height:64px;border-radius:18px 4px 18px 4px}
+.login-hero .brand-mark span{font-size:2.3rem}
+.login-hero h3{font-size:1.4rem;color:#fff;margin-bottom:4px}
+.login-hero p{font-size:.84rem;color:var(--text-mute)}
+.demo-banner{
+  display:flex;align-items:flex-start;gap:10px;padding:11px 14px;
+  background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.28);
+  border-radius:12px;font-size:.78rem;color:#FCD34D;margin-bottom:20px;line-height:1.5;
+}
+.demo-banner i{margin-top:2px}
+.login-error{color:var(--danger);font-size:.84rem;margin-top:10px;min-height:1.2em}
+
+/* Admin list */
+.recl-list{display:flex;flex-direction:column;gap:12px;max-height:520px;overflow-y:auto;padding-right:4px}
+.recl-item{
+  background:rgba(0,0,0,.25);border:1px solid rgba(192,203,230,.12);
+  border-left:4px solid var(--silver-400);
+  border-radius:12px;padding:16px;transition:all var(--dur) var(--ease);
+}
+.recl-item:hover{border-color:rgba(192,203,230,.3)}
+.recl-item.new{border-left-color:var(--warning)}
+.recl-item.done{border-left-color:var(--success);opacity:.7}
+.recl-head{display:flex;justify-content:space-between;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+.recl-head b{color:#fff;font-size:.9rem}
+.recl-head small{color:var(--text-mute);font-size:.76rem}
+.recl-body{color:var(--text-dim);font-size:.88rem;line-height:1.55;word-break:break-word}
+.recl-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+
+/* Config toggles */
+.config-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;border-bottom:1px solid rgba(192,203,230,.08)}
+.config-row:last-child{border-bottom:none}
+.config-row b{display:block;color:#fff;font-size:.92rem;margin-bottom:2px}
+.config-row small{color:var(--text-mute);font-size:.8rem}
+.switch{position:relative;width:48px;height:26px;border-radius:20px;background:var(--navy-500);transition:background var(--dur) var(--ease);flex-shrink:0}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--silver-400);transition:all var(--dur) var(--ease)}
+.switch.on{background:var(--silver-300)}
+.switch.on::after{left:25px;background:var(--navy-900)}
+
+/* Skeleton */
+.skeleton{background:linear-gradient(90deg,rgba(192,203,230,.06) 25%,rgba(192,203,230,.12) 50%,rgba(192,203,230,.06) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:6px}
+@keyframes shimmer{to{background-position:-200% 0}}
+
+/* Footer */
+.footer{border-top:1px solid rgba(192,203,230,.14);padding:48px 0 28px;margin-top:auto}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:36px}
+@media(max-width:860px){.footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.footer-grid{grid-template-columns:1fr}}
+.footer h4{font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--silver-400);margin-bottom:16px}
+.footer-brand{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.footer-brand .brand-mark{width:40px;height:40px;border-radius:11px 3px 11px 3px}
+.footer-brand .brand-mark span{font-size:1.4rem}
+.footer p,.footer a{display:block;font-size:.86rem;color:var(--text-mute);margin-bottom:9px;transition:color var(--dur) var(--ease)}
+.footer a:hover{color:#fff}
+.footer-copy{text-align:center;padding-top:26px;margin-top:26px;border-top:1px solid rgba(192,203,230,.08);font-size:.8rem;color:var(--text-mute)}
+.footer-note{font-size:.74rem;color:var(--text-mute);line-height:1.55;margin-top:10px;opacity:.7}
+
+/* Utilitários */
+.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.row-between{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.mt-16{margin-top:16px}.mt-24{margin-top:24px}.mb-16{margin-bottom:16px}
+.hide{display:none!important}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:640px){.hide-sm{display:none}}
+body.reduced-motion *,body.reduced-motion *::before,body.reduced-motion *::after{animation-duration:.01s!important;transition-duration:.01s!important}
+.spinner{width:16px;height:16px;border:2px solid rgba(192,203,230,.25);border-top-color:var(--silver-300);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="shell" id="shell">
+
+  <!-- ============ NAVBAR ============ -->
+  <nav class="nav" role="navigation" aria-label="Principal">
+    <div class="container">
+      <div class="nav-inner">
+        <div class="brand" data-nav="home" role="link" tabindex="0" aria-label="HYZA — Início">
+          <div class="brand-mark"><span>H</span></div>
+          <div class="brand-text"><b>HYZA</b><small>Eng. Software</small></div>
+        </div>
+        <div class="nav-links" id="navLinks">
+          <a class="nav-link active" href="#" data-nav="home">Home</a>
+          <a class="nav-link" href="#" data-nav="app">Plataforma</a>
+          <a class="nav-link" href="#" data-nav="sobre">Sobre a HYZA</a>
+          <a class="nav-link" href="#" data-nav="contato">Contato</a>
+        </div>
+        <div class="nav-actions">
+          <button class="btn-ghost" id="btnAdminAccess" title="Acesso administrativo" aria-label="Acesso administrativo">
+            <i class="fas fa-lock"></i><span class="hide-sm">Admin</span>
+          </button>
+          <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ VIEW: HOME ============ -->
+  <main class="view active" id="view-home">
+    <div class="container">
+      <section class="hero">
+        <div class="hero-left">
+          <div class="hero-mark-row">
+            <div class="hero-mark"><span>H</span></div>
+            <div>
+              <div class="eyebrow">Engenharia · Software · Automação</div>
+              <h1 class="h1 text-grad" style="margin-top:10px">HYZA<br>Eng. Software</h1>
+            </div>
+          </div>
+          <p class="hero-lead">
+            Engenharia e software que transformam ideias em soluções.
+            Tecnologia precisa ser clara, eficiente e aplicável — não complicada.
+          </p>
+          <div class="hero-meta">
+            <span class="chip"><i class="fas fa-microchip"></i> Inovação</span>
+            <span class="chip"><i class="fas fa-bolt"></i> Eficiência</span>
+            <span class="chip"><i class="fas fa-feather"></i> Simplicidade</span>
+            <span class="chip"><i class="fas fa-compass-drafting"></i> Precisão</span>
+          </div>
+          <div class="hero-cta">
+            <button class="btn btn-primary" data-nav="app">
+              <i class="fas fa-rocket"></i> Acessar Plataforma
+            </button>
+            <button class="btn btn-secondary" data-nav="sobre">
+              <i class="fas fa-circle-info"></i> Conhecer a HYZA
+            </button>
+          </div>
+        </div>
+        <aside class="hero-panel" aria-hidden="true">
+          <div class="hero-panel-head">
+            <b>System Status</b>
+            <div class="dot-row"><span class="dot g"></span><span class="dot"></span><span class="dot"></span></div>
+          </div>
+          <div class="hero-kpis">
+            <div class="kpi-mini"><b id="heroKpiRet">—</b><small>Retiradas</small></div>
+            <div class="kpi-mini"><b id="heroKpiRec">—</b><small>Reclamações</small></div>
+          </div>
+          <div class="hero-panel-list">
+            <div class="hero-panel-item"><i class="fas fa-database"></i><span>Persistência local</span><span class="bar"><i style="--w:100%"></i></span></div>
+            <div class="hero-panel-item"><i class="fas fa-table"></i><span>Filtro de planilhas</span><span class="bar"><i style="--w:100%"></i></span></div>
+            <div class="hero-panel-item"><i class="fas fa-clipboard-check"></i><span>Protocolo OF</span><span class="bar"><i style="--w:100%"></i></span></div>
+            <div class="hero-panel-item"><i class="fas fa-shield-halved"></i><span>Sessão admin (demo)</span><span class="bar"><i style="--w:70%"></i></span></div>
+          </div>
+        </aside>
+      </section>
+
+      <!-- Sobre -->
+      <section class="section" id="secao-sobre">
+        <div class="section-head">
+          <div class="eyebrow">Sobre a HYZA</div>
+          <h2 class="h2 text-grad">Engenharia aplicada com propósito</h2>
+          <p>Uma empresa independente dedicada a transformar necessidades reais em sistemas funcionais, bem estruturados e sustentáveis.</p>
+        </div>
+        <div class="about-grid">
+          <div class="about-card">
+            <p><strong>HYZA ENG. SOFTWARE</strong> é uma empresa dedicada ao desenvolvimento de soluções tecnológicas e de engenharia voltadas para eficiência, inovação e simplicidade. Criada e administrada por <strong>Isabelly D. S.</strong>, a HYZA nasceu com o objetivo de transformar ideias em sistemas funcionais, práticos e bem estruturados.</p>
+            <p>Unindo conhecimentos de engenharia, tecnologia e desenvolvimento de software, a empresa busca oferecer soluções inteligentes que atendam às necessidades reais de pessoas e empresas. Cada projeto é desenvolvido com atenção aos detalhes, foco na qualidade e compromisso com resultados.</p>
+            <p>Na HYZA, acreditamos que tecnologia não precisa ser complicada. O objetivo é criar ferramentas que realmente resolvam problemas, otimizem processos e tragam inovação de forma clara e eficiente.</p>
+          </div>
+          <div class="about-card">
+            <div class="eyebrow" style="margin-bottom:16px">Valores que orientam</div>
+            <div class="values-list">
+              <div class="value-item"><div class="vi-ico"><i class="fas fa-crosshairs"></i></div><div><b>Precisão</b><span>Cada linha de código tem uma razão de existir.</span></div></div>
+              <div class="value-item"><div class="vi-ico"><i class="fas fa-brain"></i></div><div><b>Inteligência aplicada</b><span>Soluções que pensam junto com o usuário.</span></div></div>
+              <div class="value-item"><div class="vi-ico"><i class="fas fa-gem"></i></div><div><b>Sofisticação</b><span>Qualidade sem excessos, clareza sem ruído.</span></div></div>
+              <div class="value-item"><div class="vi-ico"><i class="fas fa-handshake-angle"></i></div><div><b>Confiabilidade</b><span>Compromisso com o que é entregue.</span></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Áreas -->
+      <section class="section">
+        <div class="section-head">
+          <div class="eyebrow">Áreas de atuação</div>
+          <h2 class="h2 text-grad">Do conceito à operação</h2>
+          <p>Frentes onde a HYZA atua com profundidade técnica e visão de produto.</p>
+        </div>
+        <div class="areas-grid">
+          <article class="area-card"><div class="ai"><i class="fas fa-code"></i></div><h3>Desenvolvimento de Software</h3><p>Aplicações web sob medida, do protótipo à entrega, com arquitetura limpa e foco em manutenibilidade.</p></article>
+          <article class="area-card"><div class="ai"><i class="fas fa-robot"></i></div><h3>Automação de Processos</h3><p>Eliminação de tarefas repetitivas por meio de fluxos automatizados e integrações confiáveis.</p></article>
+          <article class="area-card"><div class="ai"><i class="fas fa-table-columns"></i></div><h3>Sistemas de Gestão</h3><p>Painéis operacionais que centralizam informação e tornam decisões mais rápidas e seguras.</p></article>
+          <article class="area-card"><div class="ai"><i class="fas fa-database"></i></div><h3>Organização de Dados</h3><p>Estruturação, filtragem e exportação de dados com integridade e legibilidade.</p></article>
+          <article class="area-card"><div class="ai"><i class="fas fa-gauge-high"></i></div><h3>Produtividade</h3><p>Ferramentas que reduzem atrito e devolvem tempo para o que realmente importa.</p></article>
+          <article class="area-card"><div class="ai"><i class="fas fa-compass-drafting"></i></div><h3>Engenharia Aplicada</h3><p>Soluções tecnológicas pensadas para contextos técnicos e operacionais exigentes.</p></article>
+        </div>
+      </section>
+
+      <!-- Reclamações públicas -->
+      <section class="section">
+        <div class="reclamacoes-wrap">
+          <div class="eyebrow">Canal oficial</div>
+          <h2 class="h2 text-grad" style="margin-top:12px">Canal de Reclamações</h2>
+          <p class="text-dim" style="max-width:640px;margin-top:10px">
+            Este é o canal público da HYZA para registrar reclamações sobre produtos, serviços ou atendimento.
+            Cada manifestação é recebida com seriedade e tratada de forma confidencial pela administração.
+          </p>
+          <div class="reclamacoes-grid">
+            <div class="form" aria-label="Formulário de reclamação">
+              <div class="field">
+                <label for="recTexto">Descrição da reclamação <span class="req">*</span></label>
+                <textarea class="textarea" id="recTexto" maxlength="2000" placeholder="Descreva com detalhes o ocorrido..." required></textarea>
+              </div>
+              <div class="field">
+                <label for="recNome">Seu nome <span class="text-mute">(opcional)</span></label>
+                <input class="input" id="recNome" maxlength="120" placeholder="Como deseja ser identificado(a)?">
+              </div>
+              <div class="row" style="margin-top:6px">
+                <button class="btn btn-primary" id="btnEnviarReclamacao"><i class="fas fa-paper-plane"></i> Enviar reclamação</button>
+                <small class="text-mute" id="recFeedback" role="status" aria-live="polite" style="font-size:.8rem"></small>
+              </div>
+            </div>
+            <div class="about-card" style="display:flex;flex-direction:column;gap:14px">
+              <div class="eyebrow">Como funciona</div>
+              <div class="value-item"><div class="vi-ico"><i class="fas fa-1"></i></div><div><b>Envio público</b><span>Você registra a manifestação sem cadastro.</span></div></div>
+              <div class="value-item"><div class="vi-ico"><i class="fas fa-2"></i></div><div><b>Recebimento restrito</b><span>Apenas a administração visualiza o conteúdo.</span></div></div>
+              <div class="value-item"><div class="vi-ico"><i class="fas fa-3"></i></div><div><b>Tratamento</b><span>As manifestações são acompanhadas até a resolução.</span></div></div>
+              <p class="text-mute" style="font-size:.8rem;margin-top:auto">Os dados ficam armazenados localmente neste navegador (modo demonstração). Em produção, utiliza-se backend seguro.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ============ VIEW: APP (PLATAFORMA) ============ -->
+  <main class="view" id="view-app">
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Navegação da plataforma">
+        <div class="sidebar-group">
+          <div class="sidebar-label">Visão Geral</div>
+          <button class="sidebar-item active" data-tool="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
+          <button class="sidebar-item" data-tool="historico"><i class="fas fa-clock-rotate-left"></i> Histórico</button>
+        </div>
+        <div class="sidebar-group">
+          <div class="sidebar-label">Ferramentas</div>
+          <button class="sidebar-item" data-tool="planilhas"><i class="fas fa-table"></i> Filtro de Planilhas</button>
+          <button class="sidebar-item" data-tool="protocolo"><i class="fas fa-clipboard-check"></i> Protocolo OF</button>
+          <button class="sidebar-item" data-tool="relatorios"><i class="fas fa-file-export"></i> Relatórios</button>
+        </div>
+        <div class="sidebar-group">
+          <div class="sidebar-label">Sistema</div>
+          <button class="sidebar-item" data-tool="config"><i class="fas fa-sliders"></i> Configurações</button>
+          <button class="sidebar-item" data-tool="admin"><i class="fas fa-shield-halved"></i> Administração</button>
+        </div>
+      </aside>
+
+      <div class="workspace">
+        <div class="ws-head">
+          <div>
+            <div class="breadcrumbs" id="breadcrumbs">
+              <i class="fas fa-house"></i><span>Plataforma</span><i class="fas fa-chevron-right"></i><span>Dashboard</span>
+            </div>
+            <h2 class="ws-title" id="wsTitle">Dashboard</h2>
+            <p class="ws-sub" id="wsSub">Visão consolidada das atividades da plataforma.</p>
+          </div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <section class="tool-panel active" id="tool-dashboard">
+          <div class="kpi-grid" id="dashKpis"></div>
+          <div class="card">
+            <div class="card-head"><h3><i class="fas fa-bolt"></i> Atalhos rápidos</h3></div>
+            <div class="row">
+              <button class="btn btn-secondary btn-sm" data-tool="planilhas"><i class="fas fa-table"></i> Abrir Filtro de Planilhas</button>
+              <button class="btn btn-secondary btn-sm" data-tool="protocolo"><i class="fas fa-clipboard-check"></i> Abrir Protocolo OF</button>
+              <button class="btn btn-secondary btn-sm" data-tool="relatorios"><i class="fas fa-file-export"></i> Gerar relatório</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3><i class="fas fa-clock-rotate-left"></i> Atividades recentes</h3></div>
+            <div id="dashRecent"><div class="empty"><div class="e-ico"><i class="fas fa-inbox"></i></div><b>Nenhuma atividade registrada</b><small>As ações realizadas na plataforma aparecerão aqui.</small></div></div>
+          </div>
+        </section>
+
+        <!-- PLANILHAS -->
+        <section class="tool-panel" id="tool-planilhas">
+          <div class="card">
+            <div class="card-head"><h3><i class="fas fa-cloud-arrow-up"></i> Upload de planilha</h3></div>
+            <div class="upload" id="uploadZone" role="button" tabindex="0" aria-label="Selecionar arquivo de planilha">
+              <i class="fas fa-file-excel big"></i>
+              <b>Arraste o arquivo aqui ou clique para selecionar</b>
+              <small>Formatos aceitos: .xlsx, .xls e .csv · Limite recomendado: 10 MB</small>
+              <input type="file" id="fileExcel" accept=".xlsx,.xls,.csv" class="sr-only">
+              <div class="file-meta" id="fileMeta"></div>
+            </div>
+          </div>
+          <div class="card" id="planilhaFiltrosCard" style="display:none">
+            <div class="card-head"><h3><i class="fas fa-filter"></i> Filtros dinâmicos</h3>
+              <button class="btn btn-secondary btn-sm" id="btnLimparFiltros"><i class="fas fa-eraser"></i> Limpar tudo</button>
+            </div>
+            <div class="filters" id="filtrosDinamicos"></div>
+          </div>
+          <div class="card" id="planilhaResultadoCard" style="display:none">
+            <div class="card-head">
+              <h3><i class="fas fa-table-list"></i> Resultados</h3>
+              <div class="row">
+                <span class="tag tag-mute" id="tagRegistros">0 registros</span>
+                <button class="btn btn-primary btn-sm" id="btnExportarExcel"><i class="fas fa-download"></i> Exportar .xlsx</button>
+              </div>
+            </div>
+            <div class="row" style="margin-bottom:14px">
+              <input class="input" id="buscaPlanilha" placeholder="Buscar em todas as colunas…" aria-label="Buscar em todas as colunas" style="max-width:340px">
+            </div>
+            <div class="table-wrap" id="planilhaTabelaWrap"></div>
+            <div class="pagination" id="planilhaPaginacao"></div>
+          </div>
+        </section>
+
+        <!-- PROTOCOLO -->
+        <section class="tool-panel" id="tool-protocolo">
+          <div class="kpi-grid" id="protoKpis"></div>
+          <div class="card">
+            <div class="card-head"><h3><i class="fas fa-plus"></i> Novo registro de retirada</h3></div>
+            <form class="form" id="formProtocolo">
+              <div class="filters" style="margin:0">
+                <div class="filter-field"><label for="protoData">Data <span class="req">*</span></label><input type="date" class="input" id="protoData" required></div>
+                <div class="filter-field"><label for="protoProduto">Produto <span class="req">*</span></label><input class="input" id="protoProduto" maxlength="120" placeholder="Ex.: Notebook Dell" required></div>
+                <div class="filter-field"><label for="protoLote">Lote</label><input class="input" id="protoLote" maxlength="60" placeholder="Ex.: LT-5532"></div>
+                <div class="filter-field"><label for="protoNome">Nome</label><input class="input" id="protoNome" maxlength="120" placeholder="Responsável"></div>
+              </div>
+              <div class="row" style="margin-top:16px">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Adicionar registro</button>
+                <small class="text-mute" style="font-size:.8rem">Campos com <span style="color:var(--danger)">*</span> são obrigatórios.</small>
+              </div>
+            </form>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <h3><i class="fas fa-list-check"></i> Registros</h3>
+              <div class="row">
+                <input class="input" id="buscaProtocolo" placeholder="Buscar registros…" aria-label="Buscar registros" style="max-width:260px">
+                <select class="select" id="filtroStatusProto" aria-label="Filtrar por status" style="max-width:160px">
+                  <option value="">Todos status</option>
+                  <option value="pendente">Pendentes</option>
+                  <option value="entregue">Entregues</option>
+                </select>
+                <button class="btn btn-secondary btn-sm" id="btnExportarProtocolo"><i class="fas fa-download"></i> Exportar</button>
+              </div>
+            </div>
+            <div class="table-wrap" id="protoTabelaWrap"></div>
+          </div>
+        </section>
+
+        <!-- RELATÓRIOS -->
+        <section class="tool-panel" id="tool-relatorios">
+          <div class="card">
+            <div class="card-head"><h3><i class="fas fa-file-export"></i> Central de Relatórios</h3></div>
+            <p class="text-dim" style="font-size:.9rem;margin-bottom:18px">Os relatórios são gerados a partir dos dados reais armazenados na plataforma. Escolha a fonte e o período.</p>
+            <div class="filters" style="margin:0">
+              <div class="filter-field"><label for="relFonte">Fonte de dados</label>
+                <select class="select" id="relFonte">
+                  <option value="protocolo">Protocolo de Retirada OF</option>
+                  <option value="reclamacoes">Reclamações</option>
+                </select>
+              </div>
+              <div class="filter-field"><label for="relDe">De</label><input type="date" class="input" id="relDe"></div>
+              <div class="filter-field"><label for="relAte">Até</label><input type="date" class="input" id="relAte"></div>
+              <div class="filter-field"><label for="relFormato">Formato</label>
+                <select class="select" id="relFormato">
+                  <option value="xlsx">Excel (.xlsx)</option>
+                  <option value="csv">CSV (.csv)</option>
+                </select>
+              </div>
+            </div>
+            <div class="row" style="margin-top:18px">
+              <button class="btn btn-primary" id="btnGerarRelatorio"><i class="fas fa-gear"></i> Gerar relatório</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3><i class="fas fa-chart-simple"></i> Prévia dos dados</h3></div>
+            <div class="table-wrap" id="relPreviewWrap"><div class="empty"><div class="e-ico"><i class="fas fa-table"></i></div><b>Nenhum relatório gerado</b><small>Configure os filtros e clique em "Gerar relatório".</small></div></div>
+          </div>
+        </section>
+
+        <!-- HISTÓRICO -->
+        <section class="tool-panel" id="tool-historico">
+          <div class="card">
+            <div class="card-head"><h3><i class="fas fa-clock-rotate-left"></i> Histórico de Atividades</h3>
+              <button class="btn btn-danger btn-sm" id="btnLimparHistorico"><i class="fas fa-trash"></i> Limpar histórico</button>
+            </div>
+            <div class="table-wrap" id="historicoWrap"></div>
+          </div>
+        </section>
+
+        <!-- CONFIGURAÇÕES -->
+        <section class="tool-panel" id="tool-config">
+          <div class="card">
+            <div class="card-head"><h3><i class="fas fa-sliders"></i> Preferências da interface</h3></div>
+            <div class="config-row">
+              <div><b>Movimento reduzido</b><small>Desativa animações para maior conforto visual.</small></div>
+              <button class="switch" data-config="reducedMotion" aria-label="Alternar movimento reduzido"></button>
+            </div>
+            <div class="config-row">
+              <div><b>Densidade compacta</b><small>Reduz o espaçamento das tabelas para exibir mais dados.</small></div>
+              <button class="switch" data-config="compact" aria-label="Alternar densidade compacta"></button>
+            </div>
+            <div class="config-row">
+              <div><b>Confirmações destrutivas</b><small>Solicita confirmação antes de excluir registros.</small></div>
+              <button class="switch" data-config="confirmDelete" aria-label="Alternar confirmações"></button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3><i class="fas fa-circle-info"></i> Informações da plataforma</h3></div>
+            <div class="config-row"><div><b>Versão</b><small>HYZA Platform v2.0</small></div><span class="tag tag-info">Estável</span></div>
+            <div class="config-row"><div><b>Persistência</b><small>localStorage (este navegador)</small></div><span class="tag tag-warn">Local</span></div>
+            <div class="config-row"><div><b>Autenticação</b><small>Demonstração local — não segura</small></div><span class="tag tag-warn">Demo</span></div>
+            <div class="config-row"><div><b>Dados</b><small>Exportáveis a qualquer momento</small></div><span class="tag tag-ok">Disponível</span></div>
+          </div>
+        </section>
+
+        <!-- ADMIN -->
+        <section class="tool-panel" id="tool-admin">
+          <div id="adminGate" class="card">
+            <div class="empty">
+              <div class="e-ico"><i class="fas fa-shield-halved"></i></div>
+              <b>Acesso administrativo necessário</b>
+              <small>Faça login para visualizar o painel de administração.</small>
+              <div class="mt-16"><button class="btn btn-primary" id="btnAdminLoginInline"><i class="fas fa-lock"></i> Entrar como administrador</button></div>
+            </div>
+          </div>
+          <div id="adminContent" style="display:none">
+            <div class="demo-banner"><i class="fas fa-triangle-exclamation"></i><div><b>Modo demonstração local.</b> A autenticação nesta versão não utiliza servidor. Em produção, será substituída por autenticação real com sessões seguras e controle de permissões no backend.</div></div>
+            <div class="card">
+              <div class="card-head">
+                <h3><i class="fas fa-inbox"></i> Reclamações recebidas</h3>
+                <div class="row">
+                  <select class="select" id="filtroReclStatus" aria-label="Filtrar reclamações" style="max-width:160px">
+                    <option value="">Todas</option>
+                    <option value="novo">Novas</option>
+                    <option value="done">Atendidas</option>
+                  </select>
+                  <button class="btn btn-danger btn-sm" id="btnSairAdmin"><i class="fas fa-right-from-bracket"></i> Sair</button>
+                </div>
+              </div>
+              <div class="recl-list" id="reclAdminList"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">
+            <div class="brand-mark"><span>H</span></div>
+            <div class="brand-text"><b>HYZA</b><small>Eng. Software</small></div>
+          </div>
+          <p class="text-mute" style="font-size:.86rem;max-width:280px">Engenharia e software que transformam ideias em soluções funcionais, práticas e bem estruturadas.</p>
+        </div>
+        <div>
+          <h4>Contato</h4>
+          <a href="mailto:hyza.eng@gmail.com"><i class="fas fa-envelope"></i> hyza.eng@gmail.com</a>
+          <a href="tel:+5543988718805"><i class="fas fa-phone-alt"></i> (43) 98871-8805</a>
+        </div>
+        <div>
+          <h4>Navegação</h4>
+          <a href="#" data-nav="home">Home</a>
+          <a href="#" data-nav="app">Plataforma</a>
+          <a href="#" data-nav="sobre">Sobre a HYZA</a>
+          <a href="#" data-nav="contato">Contato</a>
+        </div>
+        <div>
+          <h4>Institucional</h4>
+          <p>Privacidade</p>
+          <p>Termos de uso</p>
+          <p>Administração: Isabelly D. S.</p>
+        </div>
+      </div>
+      <div class="footer-copy">
+        © 2026 HYZA Eng. Software — Tecnologia que transforma.
+        <p class="footer-note">Aplicação executada localmente no navegador. Persistência via localStorage. Autenticação em modo demonstração, sem servidor.</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ============ TOASTS ============ -->
+<div class="toast-host" id="toastHost" aria-live="polite"></div>
+
+<!-- ============ MODAL LOGIN ============ -->
+<div class="modal-host" id="modalLogin" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <div></div>
+      <button class="modal-close" data-close-modal aria-label="Fechar"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="login-hero">
+      <div class="brand-mark"><span>H</span></div>
+      <h3 id="loginTitle">Acesso Administrativo</h3>
+      <p>Área restrita da administração HYZA</p>
+    </div>
+    <div class="demo-banner"><i class="fas fa-triangle-exclamation"></i><div><b>Demonstração local.</b> Esta autenticação não utiliza backend. Em produção, será substituída por autenticação segura no servidor.</div></div>
+    <form class="form" id="formLogin">
+      <div class="field">
+        <label for="loginUser">Usuário</label>
+        <input class="input" id="loginUser" autocomplete="username" placeholder="admin" value="admin">
+      </div>
+      <div class="field">
+        <label for="loginPass">Senha</label>
+        <input class="input" id="loginPass" type="password" autocomplete="current-password" placeholder="••••••">
+      </div>
+      <button type="submit" class="btn btn-primary" id="btnLoginSubmit"><i class="fas fa-right-to-bracket"></i> Entrar</button>
+      <div class="login-error" id="loginError" role="alert"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL CONFIRMAÇÃO ============ -->
+<div class="modal-host" id="modalConfirm" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="confirmTitle">Confirmar ação</h3>
+      <button class="modal-close" data-close-modal aria-label="Fechar"><i class="fas fa-xmark"></i></button>
+    </div>
+    <p class="text-dim" id="confirmMessage" style="margin-bottom:24px">Deseja continuar?</p>
+    <div class="row" style="justify-content:flex-end">
+      <button class="btn btn-secondary" data-close-modal>Cancelar</button>
+      <button class="btn btn-danger" id="confirmYes"><i class="fas fa-check"></i> Confirmar</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* =====================================================================
+   HYZA PLATFORM v2.0 — Módulos JavaScript
+   Arquitetura: IIFE com namespace global HYZA.*
+   Módulos: Store, Utils, Toast, Modal, Router, Auth,
+            XlsxTool, Protocolo, Reclamacoes, Historico, Relatorios, Config
+   ===================================================================== */
+(function(){
+'use strict';
+
+/* ---------------------------------------------------------------------
+   UTILS
+   --------------------------------------------------------------------- */
+const Utils = {
+  uuid(){ return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,9); },
+
+  escapeHtml(str){
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  },
+
+  fmtDate(d){
+    if (!d) return '—';
+    try{
+      const dt = (d instanceof Date) ? d : new Date(d + (String(d).length===10?'T00:00:00':''));
+      if (isNaN(dt)) return String(d);
+      return dt.toLocaleDateString('pt-BR');
+    }catch{ return String(d); }
+  },
+
+  fmtDateTime(d){
+    try{
+      const dt = (d instanceof Date) ? d : new Date(d);
+      if (isNaN(dt)) return String(d);
+      return dt.toLocaleString('pt-BR');
+    }catch{ return String(d); }
+  },
+
+  todayISO(){
+    const d = new Date();
+    const p = n => String(n).padStart(2,'0');
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+  },
+
+  debounce(fn, ms=250){
+    let t; return function(...args){ clearTimeout(t); t = setTimeout(()=>fn.apply(this,args), ms); };
+  },
+
+  bytes(n){
+    if (!n && n !== 0) return '—';
+    const u = ['B','KB','MB','GB']; let i=0;
+    while (n >= 1024 && i < u.length-1){ n/=1024; i++; }
+    return n.toFixed(n<10?2:0) + ' ' + u[i];
+  },
+
+  downloadBlob(blob, filename){
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 200);
+  },
+
+  exportCSV(rows, headers, filename){
+    const esc = v => {
+      const s = (v===null||v===undefined)?'':String(v);
+      return /[",;\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
+    };
+    const lines = [headers.map(esc).join(';')];
+    rows.forEach(r => lines.push(headers.map(h => esc(r[h])).join(';')));
+    const blob = new Blob(['\uFEFF'+lines.join('\n')], {type:'text/csv;charset=utf-8;'});
+    Utils.downloadBlob(blob, filename);
+  },
+
+  exportXLSX(rows, filename, sheetName='Dados'){
+    if (typeof XLSX === 'undefined'){
+      throw new Error('Biblioteca XLSX não carregada. Verifique a conexão.');
+    }
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+    XLSX.writeFile(wb, filename);
+  }
+};
+
+/* ---------------------------------------------------------------------
+   STORE — persistência com migração e validação
+   Chaves antigas: hyza_registros, hyza_reclamacoes
+   Chaves novas:   hyza.v2.protocolo, hyza.v2.reclamacoes,
+                   hyza.v2.historico, hyza.v2.config, hyza.v2.session
+   --------------------------------------------------------------------- */
+const Store = {
+  KEYS: {
+    protocolo:  'hyza.v2.protocolo',
+    reclamacoes:'hyza.v2.reclamacoes',
+    historico:  'hyza.v2.historico',
+    config:     'hyza.v2.config',
+    session:    'hyza.v2.session',
+    legacyReg:  'hyza_registros',
+    legacyRec:  'hyza_reclamacoes'
+  },
+
+  _read(key, fallback){
+    try{
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    }catch(e){ console.warn('[Store] Falha ao ler', key, e); return fallback; }
+  },
+  _write(key, value){
+    try{ localStorage.setItem(key, JSON.stringify(value)); return true; }
+    catch(e){ console.warn('[Store] Falha ao escrever', key, e); return false; }
+  },
+
+  migrate(){
+    // Migra protocolo legado (formato antigo: {id,data,produto,lote,nome})
+    if (!localStorage.getItem(this.KEYS.protocolo)){
+      const legacy = this._read(this.KEYS.legacyReg, []);
+      if (Array.isArray(legacy) && legacy.length){
+        const migrated = legacy.map(r => ({
+          id: r.id || Utils.uuid(),
+          data: r.data || Utils.todayISO(),
+          produto: r.produto || '',
+          lote: r.lote || '',
+          nome: r.nome || '',
+          entregue: !!r.entregue,
+          dataEntrega: r.entregue ? (r.dataEntrega || null) : null,
+          criadoEm: r.criadoEm || new Date().toISOString()
+        }));
+        this._write(this.KEYS.protocolo, migrated);
+        console.info('[Store] Migrados', migrated.length, 'registros de protocolo.');
+      }
+    }
+    // Migra reclamações legadas
+    if (!localStorage.getItem(this.KEYS.reclamacoes)){
+      const legacy = this._read(this.KEYS.legacyRec, []);
+      if (Array.isArray(legacy) && legacy.length){
+        const migrated = legacy.map(r => ({
+          id: r.id || Utils.uuid(),
+          texto: r.texto || '',
+          nome: r.nome || 'Anônimo',
+          data: r.data || new Date().toLocaleDateString('pt-BR'),
+          criadoEm: r.criadoEm || new Date().toISOString(),
+          status: r.status || 'novo'
+        }));
+        this._write(this.KEYS.reclamacoes, migrated);
+        console.info('[Store] Migradas', migrated.length, 'reclamações.');
+      }
+    }
+  },
+
+  getProtocolo(){ const v = this._read(this.KEYS.protocolo, []); return Array.isArray(v)?v:[]; },
+  setProtocolo(v){ return this._write(this.KEYS.protocolo, v); },
+
+  getReclamacoes(){ const v = this._read(this.KEYS.reclamacoes, []); return Array.isArray(v)?v:[]; },
+  setReclamacoes(v){ return this._write(this.KEYS.reclamacoes, v); },
+
+  getHistorico(){ const v = this._read(this.KEYS.historico, []); return Array.isArray(v)?v:[]; },
+  setHistorico(v){ return this._write(this.KEYS.historico, v); },
+
+  getConfig(){ return Object.assign({reducedMotion:false, compact:false, confirmDelete:true}, this._read(this.KEYS.config, {})); },
+  setConfig(v){ return this._write(this.KEYS.config, v); },
+
+  getSession(){ return this._read(this.KEYS.session, {admin:false, since:null}); },
+  setSession(v){ return this._write(this.KEYS.session, v); },
+
+  log(acao, modulo, refId){
+    const h = this.getHistorico();
+    h.unshift({ id: Utils.uuid(), acao, modulo, refId: refId||null, quando: new Date().toISOString() });
+    // mantém últimos 300
+    this.setHistorico(h.slice(0, 300));
+  }
+};
+
+/* ---------------------------------------------------------------------
+   TOAST
+   --------------------------------------------------------------------- */
+const Toast = {
+  host: null,
+  init(){ this.host = document.getElementById('toastHost'); },
+  show(title, msg='', type='ok', ms=3800){
+    if (!this.host) return;
+    const el = document.createElement('div');
+    el.className = 'toast ' + type;
+    const icon = type==='ok' ? 'fa-circle-check' : type==='err' ? 'fa-circle-xmark' : 'fa-circle-info';
+    el.innerHTML = `<i class="fas ${icon}"></i><div><b>${Utils.escapeHtml(title)}</b>${msg?`<span>${Utils.escapeHtml(msg)}</span>`:''}</div>`;
+    this.host.appendChild(el);
+    setTimeout(()=>{ el.classList.add('out'); setTimeout(()=>el.remove(), 320); }, ms);
+  },
+  ok(t,m){ this.show(t,m,'ok'); },
+  err(t,m){ this.show(t,m,'err',5000); },
+  info(t,m){ this.show(t,m,'info'); }
+};
+
+/* ---------------------------------------------------------------------
+   MODAL genérico + confirmação
+   --------------------------------------------------------------------- */
+const Modal = {
+  open(id){ const el = document.getElementById(id); if (el){ el.classList.add('open'); } },
+  close(id){ const el = document.getElementById(id); if (el){ el.classList.remove('open'); } },
+  bindClose(){
+    document.querySelectorAll('[data-close-modal]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const m = btn.closest('.modal-host'); if (m) m.classList.remove('open');
+      });
+    });
+    document.querySelectorAll('.modal-host').forEach(m=>{
+      m.addEventListener('click', e=>{ if (e.target === m) m.classList.remove('open'); });
+    });
+    document.addEventListener('keydown', e=>{
+      if (e.key === 'Escape') document.querySelectorAll('.modal-host.open').forEach(m=>m.classList.remove('open'));
+    });
+  },
+  confirm(title, message){
+    return new Promise(resolve=>{
+      document.getElementById('confirmTitle').textContent = title;
+      document.getElementById('confirmMessage').textContent = message;
+      const yes = document.getElementById('confirmYes');
+      const handler = ()=>{ cleanup(); Modal.close('modalConfirm'); resolve(true); };
+      const cleanup = ()=>{ yes.removeEventListener('click', handler); };
+      yes.addEventListener('click', handler, {once:true});
+      this.open('modalConfirm');
+      // resolve false se fechar sem confirmar
+      const checkClose = setInterval(()=>{
+        if (!document.getElementById('modalConfirm').classList.contains('open')){
+          clearInterval(checkClose); cleanup(); resolve(false);
+        }
+      }, 200);
+    });
+  }
+};
+
+/* ---------------------------------------------------------------------
+   AUTH — demonstração local (NÃO SEGURA)
+   --------------------------------------------------------------------- */
+const Auth = {
+  CREDENTIALS: { user:'admin', pass:'283090' }, // demo — em produção: backend
+  MAX_ATTEMPTS: 5,
+  ATTEMPT_WINDOW_MS: 60_000,
+  attempts: [],
+
+  isLogged(){ return !!Store.getSession().admin; },
+
+  _tooManyAttempts(){
+    const now = Date.now();
+    this.attempts = this.attempts.filter(t => now - t < this.ATTEMPT_WINDOW_MS);
+    return this.attempts.length >= this.MAX_ATTEMPTS;
+  },
+
+  login(user, pass){
+    if (this._tooManyAttempts()) return {ok:false, msg:'Muitas tentativas. Aguarde 1 minuto.'};
+    if (user === this.CREDENTIALS.user && pass === this.CREDENTIALS.pass){
+      Store.setSession({admin:true, since:new Date().toISOString()});
+      this.attempts = [];
+      Store.log('Login administrativo', 'Auth');
+      return {ok:true};
+    }
+    this.attempts.push(Date.now());
+    return {ok:false, msg:'Credenciais inválidas.'};
+  },
+
+  logout(){
+    Store.setSession({admin:false, since:null});
+    Store.log('Logout administrativo', 'Auth');
+  }
+};
+
+/* ---------------------------------------------------------------------
+   ROUTER — SPA por hash + navegação direta
+   --------------------------------------------------------------------- */
+const Router = {
+  current: 'home',
+
+  go(view){
+    if (!['home','app','sobre','contato'].includes(view)) view = 'home';
+    this.current = view;
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+
+    if (view === 'app'){
+      document.getElementById('view-app').classList.add('active');
+      document.querySelector('.nav-link[data-nav="app"]').classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    } else if (view === 'sobre'){
+      document.getElementById('view-home').classList.add('active');
+      document.querySelector('.nav-link[data-nav="home"]').classList.add('active');
+      setTimeout(()=>document.getElementById('secao-sobre')?.scrollIntoView({behavior:'smooth'}), 60);
+    } else if (view === 'contato'){
+      document.getElementById('view-home').classList.add('active');
+      document.querySelector('.nav-link[data-nav="home"]').classList.add('active');
+      setTimeout(()=>document.getElementById('footer')?.scrollIntoView({behavior:'smooth'}), 60);
+    } else {
+      document.getElementById('view-home').classList.add('active');
+      document.querySelector('.nav-link[data-nav="home"]').classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+    // fecha menu mobile
+    document.getElementById('navLinks').classList.remove('open');
+    document.getElementById('menuToggle').setAttribute('aria-expanded','false');
+  },
+
+  bind(){
+    document.querySelectorAll('[data-nav]').forEach(el=>{
+      el.addEventListener('click', e=>{
+        e.preventDefault();
+        this.go(el.dataset.nav);
+      });
+    });
+    document.querySelectorAll('.brand[data-nav]').forEach(b=>b.addEventListener('keydown', e=>{ if (e.key==='Enter'||e.key===' '){ e.preventDefault(); this.go(b.dataset.nav); } }));
+    document.getElementById('menuToggle').addEventListener('click', ()=>{
+      const nav = document.getElementById('navLinks');
+      const open = nav.classList.toggle('open');
+      document.getElementById('menuToggle').setAttribute('aria-expanded', String(open));
+    });
+  }
+};
+
+// exporta para uso no restante do script
+window.HYZA = { Utils, Store, Toast, Modal, Auth, Router };
+
+})(); // fim parte 2
+</script>
+<script>
+(function(){
+'use strict';
+const { Utils, Store, Toast, Modal, Auth, Router } = window.HYZA;
+
+/* =====================================================================
+   XLSX TOOL — Filtro de planilhas completo
+   ===================================================================== */
+const XlsxTool = {
+  state: {
+    headers: [], rows: [], filtered: [],
+    filters: {}, search: '',
+    sortCol: null, sortDir: 'asc',
+    page: 1, perPage: 25
+  },
+
+  init(){
+    const zone = document.getElementById('uploadZone');
+    const input = document.getElementById('fileExcel');
+    if (!zone || !input) return;
+
+    zone.addEventListener('click', ()=> input.click());
+    input.addEventListener('click', e=> e.stopPropagation());
+    zone.addEventListener('keydown', e=>{ if (e.key==='Enter'||e.key===' ') { e.preventDefault(); input.click(); } });
+    input.addEventListener('change', e=>{ if (e.target.files[0]) this.loadFile(e.target.files[0]); });
+
+    ['dragenter','dragover'].forEach(evt=>{
+      zone.addEventListener(evt, e=>{ e.preventDefault(); zone.classList.add('drag'); });
+    });
+    ['dragleave','drop'].forEach(evt=>{
+      zone.addEventListener(evt, e=>{ e.preventDefault(); zone.classList.remove('drag'); });
+    });
+    zone.addEventListener('drop', e=>{
+      const f = e.dataTransfer.files[0];
+      if (f) this.loadFile(f);
+    });
+
+    document.getElementById('btnLimparFiltros').addEventListener('click', ()=> this.clearFilters());
+    document.getElementById('btnExportarExcel').addEventListener('click', ()=> this.exportar());
+    const busca = document.getElementById('buscaPlanilha');
+    if (busca) busca.addEventListener('input', Utils.debounce(()=>{
+      this.state.search = busca.value.trim().toLowerCase();
+      this.state.page = 1;
+      this.applyFilters();
+    }, 250));
+  },
+
+  loadFile(file){
+    const ok = /\.(xlsx|xls|csv)$/i.test(file.name);
+    if (!ok){ Toast.err('Formato não suportado', 'Use .xlsx, .xls ou .csv'); return; }
+    if (file.size > 10*1024*1024){ Toast.err('Arquivo muito grande', 'Limite recomendado: 10 MB'); return; }
+
+    const meta = document.getElementById('fileMeta');
+    meta.innerHTML = `<span class="tag tag-mute"><i class="fas fa-file"></i> ${Utils.escapeHtml(file.name)}</span>
+      <span class="tag tag-mute">${Utils.bytes(file.size)}</span>
+      <span class="tag tag-info"><span class="spinner"></span> processando…</span>`;
+
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      try{
+        if (typeof XLSX === 'undefined') throw new Error('Biblioteca XLSX não carregada.');
+        const data = new Uint8Array(ev.target.result);
+        const wb = XLSX.read(data, {type:'array'});
+        if (!wb.SheetNames.length) throw new Error('Planilha vazia.');
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const json = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+        if (!json.length) throw new Error('Nenhuma linha encontrada.');
+
+        const headers = json[0].map((h,i)=>{
+          const s = (h===null||h===undefined)?'':String(h).trim();
+          return s || ('Coluna '+(i+1));
+        });
+        const rows = [];
+        for (let i=1; i<json.length; i++){
+          const line = json[i];
+          if (!line || line.every(c=>c===''||c===null||c===undefined)) continue;
+          const obj = { __rid: i };
+          headers.forEach((h,j)=>{ obj[h] = (line[j]===undefined||line[j]===null) ? '' : line[j]; });
+          rows.push(obj);
+        }
+
+        if (!rows.length) throw new Error('Nenhum registro de dados encontrado.');
+
+        this.state = {
+          headers, rows, filtered: [...rows],
+          filters: {}, search: '',
+          sortCol: null, sortDir: 'asc',
+          page: 1, perPage: 25
+        };
+        this.renderFileMeta(file, rows.length, headers.length);
+        this.renderFilters();
+        this.applyFilters();
+        document.getElementById('planilhaFiltrosCard').style.display = '';
+        document.getElementById('planilhaResultadoCard').style.display = '';
+        Toast.ok('Planilha carregada', `${rows.length} registros, ${headers.length} colunas`);
+        Store.log(`Carregou planilha: ${file.name}`, 'Filtro de Planilhas');
+      }catch(err){
+        console.error(err);
+        meta.innerHTML = `<span class="tag tag-warn"><i class="fas fa-triangle-exclamation"></i> ${Utils.escapeHtml(err.message)}</span>`;
+        Toast.err('Erro ao processar', err.message);
+      }
+    };
+    reader.onerror = ()=>{ Toast.err('Erro de leitura', 'Não foi possível abrir o arquivo.'); };
+    reader.readAsArrayBuffer(file);
+  },
+
+  renderFileMeta(file, nRows, nCols){
+    const meta = document.getElementById('fileMeta');
+    meta.innerHTML = `
+      <span class="tag tag-ok"><i class="fas fa-check"></i> ${Utils.escapeHtml(file.name)}</span>
+      <span class="tag tag-mute">${Utils.bytes(file.size)}</span>
+      <span class="tag tag-mute">${nRows} linhas · ${nCols} colunas</span>
+    `;
+  },
+
+  renderFilters(){
+    const wrap = document.getElementById('filtrosDinamicos');
+    wrap.innerHTML = '';
+    this.state.headers.forEach(col=>{
+      const values = [...new Set(this.state.rows.map(r=>r[col]).filter(v=>v!==''&&v!==null&&v!==undefined))].slice(0,200);
+      const f = document.createElement('div');
+      f.className = 'filter-field';
+      if (values.length <= 60){
+        f.innerHTML = `<label>${Utils.escapeHtml(col)}</label>
+          <select class="select" aria-label="${Utils.escapeHtml(col)}" data-filter="${Utils.escapeHtml(col)}">
+            <option value="">Todos</option>
+            ${values.map(v=>`<option value="${Utils.escapeHtml(String(v))}">${Utils.escapeHtml(String(v))}</option>`).join('')}
+          </select>`;
+      } else {
+        f.innerHTML = `<label>${Utils.escapeHtml(col)}</label>
+          <input class="input" aria-label="${Utils.escapeHtml(col)}" data-filter="${Utils.escapeHtml(col)}" placeholder="Filtrar ${Utils.escapeHtml(col)}...">`;
+      }
+      wrap.appendChild(f);
+    });
+    wrap.querySelectorAll('[data-filter]').forEach(el=>{
+      el.addEventListener('input', Utils.debounce(()=>{
+        this.state.filters[el.dataset.filter] = el.value.trim();
+        this.state.page = 1;
+        this.applyFilters();
+      }, 250));
+      el.addEventListener('change', ()=>{
+        this.state.filters[el.dataset.filter] = el.value.trim();
+        this.state.page = 1;
+        this.applyFilters();
+      });
+    });
+  },
+
+  clearFilters(){
+    this.state.filters = {};
+    this.state.search = '';
+    this.state.page = 1;
+    document.querySelectorAll('[data-filter]').forEach(el=>{ el.value = ''; });
+    const busca = document.getElementById('buscaPlanilha'); if (busca) busca.value = '';
+    this.applyFilters();
+    Toast.info('Filtros limpos');
+  },
+
+  applyFilters(){
+    let data = [...this.state.rows];
+    Object.entries(this.state.filters).forEach(([col, val])=>{
+      if (!val) return;
+      const v = val.toLowerCase();
+      data = data.filter(r=> String(r[col]===undefined?'':r[col]).toLowerCase().includes(v));
+    });
+    if (this.state.search){
+      const s = this.state.search;
+      data = data.filter(r => this.state.headers.some(h => String(r[h]===undefined?'':r[h]).toLowerCase().includes(s)));
+    }
+    if (this.state.sortCol){
+      const col = this.state.sortCol;
+      const dir = this.state.sortDir === 'asc' ? 1 : -1;
+      data.sort((a,b)=>{
+        const va = a[col], vb = b[col];
+        const na = parseFloat(String(va).replace(',','.'));
+        const nb = parseFloat(String(vb).replace(',','.'));
+        if (!isNaN(na) && !isNaN(nb) && String(va).trim()!=='' && String(vb).trim()!=='') return (na-nb)*dir;
+        return String(va).localeCompare(String(vb),'pt-BR',{numeric:true})*dir;
+      });
+    }
+    this.state.filtered = data;
+    this.render();
+  },
+
+  render(){
+    const wrap = document.getElementById('planilhaTabelaWrap');
+    const pag = document.getElementById('planilhaPaginacao');
+    const total = this.state.filtered.length;
+    document.getElementById('tagRegistros').textContent = `${total} registro${total===1?'':'s'}`;
+
+    if (!total){
+      wrap.innerHTML = `<div class="empty"><div class="e-ico"><i class="fas fa-magnifying-glass"></i></div><b>Nenhum resultado</b><small>Ajuste os filtros ou a busca.</small></div>`;
+      pag.innerHTML = ''; return;
+    }
+    const per = this.state.perPage;
+    const totalPages = Math.max(1, Math.ceil(total/per));
+    if (this.state.page > totalPages) this.state.page = totalPages;
+    const start = (this.state.page-1)*per;
+    const pageData = this.state.filtered.slice(start, start+per);
+
+    let html = '<table class="data"><thead><tr>';
+    this.state.headers.forEach(h=>{
+      const sorted = this.state.sortCol === h;
+      const arrow = sorted ? (this.state.sortDir==='asc'?'fa-arrow-up':'fa-arrow-down') : 'fa-sort';
+      html += `<th data-sort="${Utils.escapeHtml(h)}" tabindex="0" aria-sort="${sorted?(this.state.sortDir==='asc'?'ascending':'descending'):'none'}" class="${sorted?'sorted':''}">${Utils.escapeHtml(h)}<i class="fas ${arrow} sort-i"></i></th>`;
+    });
+    html += '</tr></thead><tbody>';
+    pageData.forEach(r=>{
+      html += '<tr>';
+      this.state.headers.forEach(h=>{
+        html += `<td>${Utils.escapeHtml(String(r[h]===undefined?'':r[h]))}</td>`;
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+
+    // bind sort
+    wrap.querySelectorAll('th[data-sort]').forEach(th=>{
+      th.addEventListener('keydown', e=>{ if (e.key==='Enter'||e.key===' '){ e.preventDefault(); th.click(); } });
+      th.addEventListener('click', ()=>{
+        const col = th.dataset.sort;
+        if (this.state.sortCol === col){
+          this.state.sortDir = this.state.sortDir==='asc' ? 'desc' : 'asc';
+        } else {
+          this.state.sortCol = col; this.state.sortDir = 'asc';
+        }
+        this.applyFilters();
+      });
+    });
+
+    // paginação
+    const from = start+1, to = Math.min(start+per, total);
+    let phtml = `<div class="page-info">Mostrando <b>${from}</b>–<b>${to}</b> de <b>${total}</b></div><div class="page-btns">`;
+    phtml += `<button class="page-btn" data-page="${this.state.page-1}" aria-label="Página anterior" ${this.state.page===1?'disabled':''}><i class="fas fa-chevron-left"></i></button>`;
+    const maxBtns = 5;
+    let startP = Math.max(1, this.state.page - 2);
+    let endP = Math.min(totalPages, startP + maxBtns - 1);
+    if (endP - startP < maxBtns-1) startP = Math.max(1, endP - maxBtns + 1);
+    for (let p=startP; p<=endP; p++){
+      phtml += `<button class="page-btn ${p===this.state.page?'active':''}" data-page="${p}">${p}</button>`;
+    }
+    phtml += `<button class="page-btn" data-page="${this.state.page+1}" aria-label="Próxima página" ${this.state.page===totalPages?'disabled':''}><i class="fas fa-chevron-right"></i></button>`;
+    phtml += `</div><div class="row"><label class="text-mute" style="font-size:.8rem">Por página:</label>
+      <select class="select" id="perPageSel" aria-label="Itens por página" style="width:auto;padding:6px 30px 6px 12px;font-size:.82rem">
+        ${[10,25,50,100].map(n=>`<option value="${n}" ${n===per?'selected':''}>${n}</option>`).join('')}
+      </select></div>`;
+    pag.innerHTML = phtml;
+
+    pag.querySelectorAll('[data-page]').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        const p = parseInt(b.dataset.page,10);
+        if (p>=1 && p<=totalPages){ this.state.page = p; this.render(); }
+      });
+    });
+    const sel = document.getElementById('perPageSel');
+    if (sel) sel.addEventListener('change', ()=>{
+      this.state.perPage = parseInt(sel.value,10);
+      this.state.page = 1; this.render();
+    });
+  },
+
+  exportar(){
+    const data = this.state.filtered;
+    if (!data.length){ Toast.err('Nada para exportar','Aplique filtros com resultados.'); return; }
+    const out = data.map(r=>{
+      const o = {};
+      this.state.headers.forEach(h=>{ o[h] = r[h]===undefined?'':r[h]; });
+      return o;
+    });
+    try{
+      Utils.exportXLSX(out, `hyza_planilha_filtrada_${Date.now()}.xlsx`, 'Filtrados');
+      Toast.ok('Exportação concluída', `${out.length} registros exportados.`);
+      Store.log(`Exportou ${out.length} registros filtrados`, 'Filtro de Planilhas');
+    }catch(e){ Toast.err('Erro na exportação', e.message); }
+  }
+};
+
+/* =====================================================================
+   PROTOCOLO
+   ===================================================================== */
+const Protocolo = {
+  filtroStatus: '',
+  busca: '',
+
+  init(){
+    const form = document.getElementById('formProtocolo');
+    if (!form) return;
+    document.getElementById('protoData').value = Utils.todayISO();
+
+    form.addEventListener('submit', e=>{
+      e.preventDefault();
+      this.adicionar();
+    });
+
+    document.getElementById('buscaProtocolo').addEventListener('input', Utils.debounce(e=>{
+      this.busca = e.target.value.trim().toLowerCase();
+      this.render();
+    }, 250));
+    document.getElementById('filtroStatusProto').addEventListener('change', e=>{
+      this.filtroStatus = e.target.value;
+      this.render();
+    });
+    document.getElementById('btnExportarProtocolo').addEventListener('click', ()=> this.exportar());
+
+    document.getElementById('protoTabelaWrap').addEventListener('click', e=>{
+      const btn = e.target.closest('[data-action]');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      const action = btn.dataset.action;
+      if (action === 'toggle') this.toggleEntregue(id);
+      if (action === 'remove') this.remover(id);
+    });
+
+    this.render();
+    this.renderKpis();
+  },
+
+  adicionar(){
+    const data = document.getElementById('protoData').value;
+    const produto = document.getElementById('protoProduto').value.trim();
+    const lote = document.getElementById('protoLote').value.trim();
+    const nome = document.getElementById('protoNome').value.trim();
+    if (!data || !produto){
+      Toast.err('Campos obrigatórios', 'Informe data e produto.');
+      return;
+    }
+    const lista = Store.getProtocolo();
+    const novo = {
+      id: Utils.uuid(), data, produto, lote, nome,
+      entregue: false, dataEntrega: null,
+      criadoEm: new Date().toISOString()
+    };
+    lista.push(novo);
+    Store.setProtocolo(lista);
+    Store.log(`Cadastrou retirada: ${produto}`, 'Protocolo', novo.id);
+    document.getElementById('protoProduto').value = '';
+    document.getElementById('protoLote').value = '';
+    document.getElementById('protoNome').value = '';
+    Toast.ok('Registro adicionado', `${produto} · ${Utils.fmtDate(data)}`);
+    this.render();
+    this.renderKpis();
+  },
+
+  toggleEntregue(id){
+    const lista = Store.getProtocolo();
+    const r = lista.find(x=>x.id===id);
+    if (!r) return;
+    r.entregue = !r.entregue;
+    r.dataEntrega = r.entregue ? new Date().toISOString() : null;
+    Store.setProtocolo(lista);
+    Store.log(`${r.entregue?'Marcou':'Desmarcou'} entrega: ${r.produto}`, 'Protocolo', id);
+    Toast.ok(r.entregue?'Marcado como entregue':'Revertido para pendente', r.produto);
+    this.render();
+    this.renderKpis();
+  },
+
+  async remover(id){
+    const cfg = Store.getConfig();
+    if (cfg.confirmDelete){
+      const ok = await Modal.confirm('Excluir registro', 'Esta ação é permanente. Deseja continuar?');
+      if (!ok) return;
+    }
+    const lista = Store.getProtocolo();
+    const alvo = lista.find(x=>x.id===id);
+    Store.setProtocolo(lista.filter(x=>x.id!==id));
+    Store.log(`Excluiu retirada: ${alvo?alvo.produto:'—'}`, 'Protocolo', id);
+    Toast.ok('Registro excluído');
+    this.render();
+    this.renderKpis();
+  },
+
+  renderKpis(){
+    const wrap = document.getElementById('protoKpis');
+    if (!wrap) return;
+    const lista = Store.getProtocolo();
+    const hoje = Utils.todayISO();
+    const pend = lista.filter(r=>!r.entregue).length;
+    const entr = lista.filter(r=>r.entregue).length;
+    const dia = lista.filter(r=>r.data===hoje).length;
+    wrap.innerHTML = `
+      <div class="kpi"><div class="kpi-label"><i class="fas fa-boxes-stacked"></i> Total</div><div class="kpi-value">${lista.length}</div><div class="kpi-sub">registros no histórico</div></div>
+      <div class="kpi"><div class="kpi-label"><i class="fas fa-hourglass-half"></i> Pendentes</div><div class="kpi-value" style="color:var(--warning)">${pend}</div><div class="kpi-sub">aguardando retirada</div></div>
+      <div class="kpi"><div class="kpi-label"><i class="fas fa-circle-check"></i> Entregues</div><div class="kpi-value" style="color:var(--success)">${entr}</div><div class="kpi-sub">retiradas concluídas</div></div>
+      <div class="kpi"><div class="kpi-label"><i class="fas fa-calendar-day"></i> Hoje</div><div class="kpi-value">${dia}</div><div class="kpi-sub">retiradas do dia</div></div>
+    `;
+  },
+
+  _filtered(){
+    let lista = Store.getProtocolo();
+    if (this.filtroStatus === 'pendente') lista = lista.filter(r=>!r.entregue);
+    if (this.filtroStatus === 'entregue') lista = lista.filter(r=>r.entregue);
+    if (this.busca){
+      const s = this.busca;
+      lista = lista.filter(r =>
+        (r.data||'').includes(s) ||
+        (r.produto||'').toLowerCase().includes(s) ||
+        (r.lote||'').toLowerCase().includes(s) ||
+        (r.nome||'').toLowerCase().includes(s)
+      );
+    }
+    return lista.slice().sort((a,b)=> (b.criadoEm||'').localeCompare(a.criadoEm||''));
+  },
+
+  render(){
+    const wrap = document.getElementById('protoTabelaWrap');
+    if (!wrap) return;
+    const lista = this._filtered();
+    if (!lista.length){
+      wrap.innerHTML = `<div class="empty"><div class="e-ico"><i class="fas fa-inbox"></i></div><b>Nenhum registro</b><small>Adicione uma retirada ou ajuste os filtros.</small></div>`;
+      return;
+    }
+    let html = `<table class="data"><thead><tr>
+      <th>Data</th><th>Produto</th><th>Lote</th><th>Nome</th>
+      <th>Status</th><th>Entrega</th><th class="td-right">Ações</th>
+    </tr></thead><tbody>`;
+    lista.forEach(r=>{
+      html += `<tr>
+        <td class="td-nowrap">${Utils.fmtDate(r.data)}</td>
+        <td><b style="color:#fff">${Utils.escapeHtml(r.produto)}</b></td>
+        <td class="mono">${Utils.escapeHtml(r.lote||'—')}</td>
+        <td>${Utils.escapeHtml(r.nome||'—')}</td>
+        <td>${r.entregue ? '<span class="tag tag-ok"><i class="fas fa-check"></i> Entregue</span>' : '<span class="tag tag-warn"><i class="fas fa-clock"></i> Pendente</span>'}</td>
+        <td class="td-nowrap text-mute" style="font-size:.8rem">${r.entregue && r.dataEntrega ? Utils.fmtDateTime(r.dataEntrega) : '—'}</td>
+        <td class="td-right td-nowrap">
+          <button class="btn btn-secondary btn-sm" data-action="toggle" data-id="${r.id}" title="${r.entregue?'Reverter para pendente':'Marcar como entregue'}">
+            <i class="fas ${r.entregue?'fa-rotate-left':'fa-check'}"></i>
+          </button>
+          <button class="btn btn-danger btn-sm" data-action="remove" data-id="${r.id}" title="Excluir">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+  },
+
+  exportar(){
+    const lista = this._filtered();
+    if (!lista.length){ Toast.err('Nada para exportar','Nenhum registro nos filtros atuais.'); return; }
+    const out = lista.map(r=>({
+      Data: r.data, Produto: r.produto, Lote: r.lote, Nome: r.nome,
+      Status: r.entregue ? 'Entregue' : 'Pendente',
+      'Data de entrega': r.dataEntrega ? Utils.fmtDateTime(r.dataEntrega) : ''
+    }));
+    try{
+      Utils.exportXLSX(out, `hyza_protocolo_${Date.now()}.xlsx`, 'Protocolo');
+      Toast.ok('Exportação concluída', `${out.length} registros.`);
+      Store.log(`Exportou ${out.length} registros do protocolo`, 'Protocolo');
+    }catch(e){ Toast.err('Erro na exportação', e.message); }
+  }
+};
+
+/* =====================================================================
+   RECLAMAÇÕES (público + admin)
+   ===================================================================== */
+const Reclamacoes = {
+  init(){
+    const btn = document.getElementById('btnEnviarReclamacao');
+    if (btn) btn.addEventListener('click', ()=> this.enviar());
+
+    const filtro = document.getElementById('filtroReclStatus');
+    if (filtro) filtro.addEventListener('change', ()=> this.renderAdmin());
+
+    // delegação no painel admin
+    const list = document.getElementById('reclAdminList');
+    if (list) list.addEventListener('click', async e=>{
+      const btn = e.target.closest('[data-rec-action]');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      const action = btn.dataset.recAction;
+      if (action === 'toggle') this.toggleStatus(id);
+      if (action === 'remove') await this.remover(id);
+    });
+  },
+
+  enviar(){
+    const texto = document.getElementById('recTexto').value.trim();
+    const nome = document.getElementById('recNome').value.trim() || 'Anônimo';
+    const fb = document.getElementById('recFeedback');
+    if (!texto){
+      fb.textContent = 'Descreva a reclamação antes de enviar.';
+      fb.style.color = 'var(--danger)';
+      return;
+    }
+    if (texto.length > 2000){
+      fb.textContent = 'Limite de 2000 caracteres excedido.';
+      fb.style.color = 'var(--danger)';
+      return;
+    }
+    const lista = Store.getReclamacoes();
+    const novo = {
+      id: Utils.uuid(), texto, nome,
+      data: new Date().toLocaleDateString('pt-BR'),
+      criadoEm: new Date().toISOString(),
+      status: 'novo'
+    };
+    lista.push(novo);
+    Store.setReclamacoes(lista);
+    Store.log('Nova reclamação recebida', 'Reclamações', novo.id);
+    document.getElementById('recTexto').value = '';
+    document.getElementById('recNome').value = '';
+    fb.textContent = 'Reclamação enviada com sucesso.';
+    fb.style.color = 'var(--success)';
+    Toast.ok('Reclamação enviada', 'Será analisada pela administração.');
+    setTimeout(()=>{ fb.textContent = ''; }, 4000);
+    this.renderAdmin();
+    this.updateHeroKpis();
+  },
+
+  toggleStatus(id){
+    const lista = Store.getReclamacoes();
+    const r = lista.find(x=>x.id===id);
+    if (!r) return;
+    r.status = r.status === 'done' ? 'novo' : 'done';
+    Store.setReclamacoes(lista);
+    Toast.ok(r.status==='done'?'Marcada como atendida':'Reaberta');
+    this.renderAdmin();
+  },
+
+  async remover(id){
+    const ok = await Modal.confirm('Excluir reclamação', 'Esta ação é permanente.');
+    if (!ok) return;
+    const lista = Store.getReclamacoes();
+    Store.setReclamacoes(lista.filter(x=>x.id!==id));
+    Toast.ok('Reclamação excluída');
+    this.renderAdmin();
+    this.updateHeroKpis();
+  },
+
+  renderAdmin(){
+    const wrap = document.getElementById('reclAdminList');
+    if (!wrap) return;
+    const filtro = document.getElementById('filtroReclStatus')?.value || '';
+    let lista = Store.getReclamacoes();
+    if (filtro) lista = lista.filter(r=>r.status===filtro);
+    lista = lista.slice().sort((a,b)=> (b.criadoEm||'').localeCompare(a.criadoEm||''));
+
+    if (!lista.length){
+      wrap.innerHTML = `<div class="empty"><div class="e-ico"><i class="fas fa-inbox"></i></div><b>Nenhuma reclamação</b><small>${filtro?'Nenhum resultado para o filtro atual.':'Ainda não há manifestações registradas.'}</small></div>`;
+      return;
+    }
+    wrap.innerHTML = lista.map(r=>`
+      <div class="recl-item ${r.status==='done'?'done':'new'}">
+        <div class="recl-head">
+          <b>${Utils.escapeHtml(r.nome||'Anônimo')}</b>
+          <small>${Utils.escapeHtml(r.data)}${r.status==='done'?' · <span class="tag tag-ok" style="padding:1px 8px">Atendida</span>':''}</small>
+        </div>
+        <div class="recl-body">${Utils.escapeHtml(r.texto)}</div>
+        <div class="recl-actions">
+          <button class="btn btn-secondary btn-sm" data-rec-action="toggle" data-id="${r.id}">
+            <i class="fas ${r.status==='done'?'fa-rotate-left':'fa-check'}"></i> ${r.status==='done'?'Reabrir':'Marcar atendida'}
+          </button>
+          <button class="btn btn-danger btn-sm" data-rec-action="remove" data-id="${r.id}">
+            <i class="fas fa-trash"></i> Excluir
+          </button>
+        </div>
+      </div>
+    `).join('');
+  },
+
+  updateHeroKpis(){
+    const k1 = document.getElementById('heroKpiRet');
+    const k2 = document.getElementById('heroKpiRec');
+    if (k1) k1.textContent = Store.getProtocolo().length;
+    if (k2) k2.textContent = Store.getReclamacoes().length;
+  }
+};
+
+/* =====================================================================
+   HISTÓRICO
+   ===================================================================== */
+const Historico = {
+  init(){
+    const btn = document.getElementById('btnLimparHistorico');
+    if (btn) btn.addEventListener('click', async ()=>{
+      const ok = await Modal.confirm('Limpar histórico', 'Todas as atividades registradas serão removidas.');
+      if (!ok) return;
+      Store.setHistorico([]);
+      Toast.ok('Histórico limpo');
+      this.render();
+    });
+    this.render();
+  },
+  render(){
+    const wrap = document.getElementById('historicoWrap');
+    if (!wrap) return;
+    const lista = Store.getHistorico();
+    if (!lista.length){
+      wrap.innerHTML = `<div class="empty"><div class="e-ico"><i class="fas fa-clock-rotate-left"></i></div><b>Sem atividades</b><small>As ações realizadas aparecerão aqui.</small></div>`;
+      return;
+    }
+    let html = `<table class="data"><thead><tr><th>Quando</th><th>Ação</th><th>Módulo</th><th>Referência</th></tr></thead><tbody>`;
+    lista.slice(0,200).forEach(h=>{
+      html += `<tr>
+        <td class="td-nowrap">${Utils.fmtDateTime(h.quando)}</td>
+        <td>${Utils.escapeHtml(h.acao)}</td>
+        <td><span class="tag tag-mute">${Utils.escapeHtml(h.modulo||'—')}</span></td>
+        <td class="mono text-mute" style="font-size:.76rem">${Utils.escapeHtml(h.refId||'—')}</td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+  }
+};
+
+/* =====================================================================
+   RELATÓRIOS
+   ===================================================================== */
+const Relatorios = {
+  init(){
+    const btn = document.getElementById('btnGerarRelatorio');
+    if (btn) btn.addEventListener('click', ()=> this.gerar());
+  },
+
+  _coletar(){
+    const fonte = document.getElementById('relFonte').value;
+    const de = document.getElementById('relDe').value;
+    const ate = document.getElementById('relAte').value;
+
+    if (fonte === 'protocolo'){
+      let lista = Store.getProtocolo();
+      lista = lista.filter(r=>{
+        if (de && r.data < de) return false;
+        if (ate && r.data > ate) return false;
+        return true;
+      });
+      return {
+        fonte, lista,
+        headers: ['Data','Produto','Lote','Nome','Status','DataEntrega'],
+        map: r => ({
+          Data: r.data, Produto: r.produto, Lote: r.lote, Nome: r.nome,
+          Status: r.entregue?'Entregue':'Pendente',
+          DataEntrega: r.dataEntrega ? Utils.fmtDateTime(r.dataEntrega) : ''
+        })
+      };
+    } else {
+      let lista = Store.getReclamacoes();
+      if (de || ate){
+        lista = lista.filter(r=>{
+          const iso = new Date(r.criadoEm || r.data).toISOString().slice(0,10);
+          if (de && iso < de) return false;
+          if (ate && iso > ate) return false;
+          return true;
+        });
+      }
+      return {
+        fonte, lista,
+        headers: ['Data','Nome','Texto','Status'],
+        map: r => ({
+          Data: r.data, Nome: r.nome, Texto: r.texto,
+          Status: r.status==='done'?'Atendida':'Nova'
+        })
+      };
+    }
+  },
+
+  gerar(){
+    const { lista, headers, map } = this._coletar();
+    const wrap = document.getElementById('relPreviewWrap');
+    if (!lista.length){
+      wrap.innerHTML = `<div class="empty"><div class="e-ico"><i class="fas fa-inbox"></i></div><b>Nenhum dado no período</b><small>Ajuste os filtros e tente novamente.</small></div>`;
+      Toast.info('Sem dados', 'Nenhum registro encontrado para o período.');
+      return;
+    }
+    const rows = lista.map(map);
+    // preview
+    let html = '<table class="data"><thead><tr>' + headers.map(h=>`<th>${h}</th>`).join('') + '</tr></thead><tbody>';
+    rows.slice(0,50).forEach(r=>{
+      html += '<tr>' + headers.map(h=>`<td>${Utils.escapeHtml(String(r[h]??''))}</td>`).join('') + '</tr>';
+    });
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+    if (rows.length > 50){
+      wrap.insertAdjacentHTML('beforeend', `<p class="text-mute mt-16" style="font-size:.8rem;padding:12px">Prévia limitada a 50 linhas. O download inclui todos os ${rows.length} registros.</p>`);
+    }
+
+    // download
+    const fmt = document.getElementById('relFormato').value;
+    try{
+      if (fmt === 'xlsx'){
+        Utils.exportXLSX(rows, `hyza_relatorio_${Date.now()}.xlsx`, 'Relatório');
+      } else {
+        Utils.exportCSV(rows, headers, `hyza_relatorio_${Date.now()}.csv`);
+      }
+      Toast.ok('Relatório gerado', `${rows.length} registros exportados.`);
+      Store.log(`Gerou relatório (${lista.length} registros)`, 'Relatórios');
+    }catch(e){ Toast.err('Erro ao gerar relatório', e.message); }
+  }
+};
+
+/* =====================================================================
+   CONFIG
+   ===================================================================== */
+const Config = {
+  init(){
+    const cfg = Store.getConfig();
+    const labels = { reducedMotion:'Movimento reduzido', compact:'Densidade compacta', confirmDelete:'Confirmações destrutivas' };
+    document.querySelectorAll('[data-config]').forEach(el=>{
+      const key = el.dataset.config;
+      el.setAttribute('role','switch');
+      el.setAttribute('aria-checked', String(!!cfg[key]));
+      el.classList.toggle('on', !!cfg[key]);
+      el.addEventListener('click', ()=>{
+        cfg[key] = !cfg[key];
+        el.classList.toggle('on', cfg[key]);
+        el.setAttribute('aria-checked', String(cfg[key]));
+        Store.setConfig(cfg);
+        this.apply(cfg);
+        Toast.ok('Preferência atualizada', `${labels[key]||key}: ${cfg[key]?'ativado':'desativado'}`);
+      });
+    });
+    this.apply(cfg);
+  },
+  apply(cfg){
+    document.documentElement.style.setProperty('--dur', cfg.reducedMotion ? '.01s' : '.28s');
+    document.body.classList.toggle('compact', !!cfg.compact);
+    document.body.classList.toggle('reduced-motion', !!cfg.reducedMotion);
+  }
+};
+
+/* =====================================================================
+   APP CONTROLLER — navegação entre ferramentas
+   ===================================================================== */
+const App = {
+  titles: {
+    dashboard: { t:'Dashboard', s:'Visão consolidada das atividades da plataforma.' },
+    planilhas: { t:'Filtro de Planilhas', s:'Importe, filtre, ordene e exporte dados de planilhas reais.' },
+    protocolo: { t:'Protocolo de Retirada OF', s:'Controle operacional de retiradas, entregas e histórico.' },
+    relatorios:{ t:'Central de Relatórios', s:'Gere relatórios exportáveis a partir dos dados da plataforma.' },
+    historico: { t:'Histórico de Atividades', s:'Registro cronológico das ações realizadas.' },
+    config:    { t:'Configurações', s:'Preferências de interface e informações da plataforma.' },
+    admin:     { t:'Administração', s:'Central administrativa de reclamações.' }
+  },
+
+  init(){
+    document.querySelectorAll('.sidebar-item[data-tool]').forEach(btn=>{
+      btn.addEventListener('click', ()=> this.openTool(btn.dataset.tool));
+    });
+    document.querySelectorAll('[data-tool]').forEach(el=>{
+      if (el.classList.contains('sidebar-item')) return;
+      el.addEventListener('click', ()=> this.openTool(el.dataset.tool));
+    });
+    this.openTool('dashboard');
+    this.renderDashboard();
+
+    // Gate admin
+    const gateBtn = document.getElementById('btnAdminLoginInline');
+    if (gateBtn) gateBtn.addEventListener('click', ()=> this.abrirLogin());
+    const sair = document.getElementById('btnSairAdmin');
+    if (sair) sair.addEventListener('click', ()=>{
+      Auth.logout();
+      this.renderAdminGate();
+      Toast.info('Sessão encerrada');
+    });
+    this.renderAdminGate();
+  },
+
+  openTool(tool){
+    if (!this.titles[tool]) tool = 'dashboard';
+    document.querySelectorAll('.tool-panel').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));
+    const panel = document.getElementById('tool-'+tool);
+    if (panel) panel.classList.add('active');
+    window.scrollTo({top:0});
+    const side = document.querySelector(`.sidebar-item[data-tool="${tool}"]`);
+    if (side) side.classList.add('active');
+
+    document.getElementById('wsTitle').textContent = this.titles[tool].t;
+    document.getElementById('wsSub').textContent = this.titles[tool].s;
+    document.getElementById('breadcrumbs').innerHTML = `<i class="fas fa-house"></i><span>Plataforma</span><i class="fas fa-chevron-right"></i><span>${this.titles[tool].t}</span>`;
+
+    // render por painel
+    if (tool === 'dashboard') this.renderDashboard();
+    if (tool === 'historico') Historico.render();
+    if (tool === 'admin') this.renderAdminGate();
+    if (tool === 'protocolo'){ Protocolo.render(); Protocolo.renderKpis(); }
+    if (tool === 'relatorios'){ /* noop */ }
+  },
+
+  renderDashboard(){
+    const kpi = document.getElementById('dashKpis');
+    if (!kpi) return;
+    const proto = Store.getProtocolo();
+    const recs = Store.getReclamacoes();
+    const hoje = Utils.todayISO();
+    kpi.innerHTML = `
+      <div class="kpi"><div class="kpi-label"><i class="fas fa-boxes-stacked"></i> Retiradas</div><div class="kpi-value">${proto.length}</div><div class="kpi-sub">registros no protocolo</div></div>
+      <div class="kpi"><div class="kpi-label"><i class="fas fa-hourglass-half"></i> Pendentes</div><div class="kpi-value" style="color:var(--warning)">${proto.filter(r=>!r.entregue).length}</div><div class="kpi-sub">aguardando entrega</div></div>
+      <div class="kpi"><div class="kpi-label"><i class="fas fa-comment-dots"></i> Reclamações</div><div class="kpi-value">${recs.length}</div><div class="kpi-sub">${recs.filter(r=>r.status!=='done').length} em aberto</div></div>
+      <div class="kpi"><div class="kpi-label"><i class="fas fa-calendar-day"></i> Hoje</div><div class="kpi-value">${proto.filter(r=>r.data===hoje).length}</div><div class="kpi-sub">retiradas do dia</div></div>
+    `;
+    const recent = document.getElementById('dashRecent');
+    const h = Store.getHistorico().slice(0,6);
+    if (!h.length){
+      recent.innerHTML = `<div class="empty"><div class="e-ico"><i class="fas fa-inbox"></i></div><b>Nenhuma atividade registrada</b><small>As ações realizadas aparecerão aqui.</small></div>`;
+    } else {
+      recent.innerHTML = `<div style="display:flex;flex-direction:column;gap:8px">${h.map(x=>`
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 12px;background:rgba(0,0,0,.2);border-radius:10px;font-size:.86rem">
+          <i class="fas fa-circle" style="font-size:.4rem;color:var(--silver-400)"></i>
+          <span style="flex:1;min-width:160px;color:var(--text-dim)">${Utils.escapeHtml(x.acao)}</span>
+          <span class="tag tag-mute" style="font-size:.72rem">${Utils.escapeHtml(x.modulo||'')}</span>
+          <small class="text-mute" style="font-size:.76rem">${Utils.fmtDateTime(x.quando)}</small>
+        </div>`).join('')}</div>`;
+    }
+    Reclamacoes.updateHeroKpis();
+  },
+
+  abrirLogin(){
+    document.getElementById('loginError').textContent = '';
+    document.getElementById('loginPass').value = '';
+    Modal.open('modalLogin');
+    setTimeout(()=>document.getElementById('loginPass').focus(), 80);
+  },
+
+  renderAdminGate(){
+    const gate = document.getElementById('adminGate');
+    const content = document.getElementById('adminContent');
+    if (!gate || !content) return;
+    if (Auth.isLogged()){
+      gate.style.display = 'none';
+      content.style.display = '';
+      Reclamacoes.renderAdmin();
+    } else {
+      gate.style.display = '';
+      content.style.display = 'none';
+    }
+  }
+};
+
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+document.addEventListener('DOMContentLoaded', ()=>{
+  // Migração de dados
+  Store.migrate();
+
+  // Módulos base
+  Toast.init();
+  Modal.bindClose();
+  Router.bind();
+  Router.go('home');
+
+  // Auth modal
+  document.getElementById('btnAdminAccess').addEventListener('click', ()=>{
+    if (Auth.isLogged()){
+      App.openTool('admin');
+      Router.go('app');
+    } else {
+      App.abrirLogin();
+    }
+  });
+
+  document.getElementById('formLogin').addEventListener('submit', e=>{
+    e.preventDefault();
+    const u = document.getElementById('loginUser').value.trim();
+    const p = document.getElementById('loginPass').value;
+    const res = Auth.login(u, p);
+    if (res.ok){
+      Modal.close('modalLogin');
+      Toast.ok('Sessão iniciada', 'Bem-vindo(a) à administração.');
+      App.openTool('admin');
+      Router.go('app');
+      App.renderAdminGate();
+      Reclamacoes.renderAdmin();
+    } else {
+      document.getElementById('loginError').textContent = res.msg || 'Credenciais inválidas.';
+    }
+  });
+
+  // Ferramentas
+  XlsxTool.init();
+  Protocolo.init();
+  Reclamacoes.init();
+  Historico.init();
+  Relatorios.init();
+  Config.init();
+  App.init();
+
+  // Atualiza KPIs da home
+  Reclamacoes.updateHeroKpis();
+
+  // Aviso de estado demo no console
+  console.info('%cHYZA Platform v2.0', 'color:#C0CBE0;font-weight:bold;font-size:13px');
+  console.info('%cModo demonstração local. Autenticação sem backend — não usar em produção sem servidor seguro.', 'color:#FBBF24');
+});
+
+})(); // fim parte 3
+</script>
+</body>
+</html>
